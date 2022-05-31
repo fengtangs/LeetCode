@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jol-cli-0.10-full">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../下载/jol-cli-0.10-full.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

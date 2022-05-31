@@ -343,7 +343,7 @@ public class tanxin {
         return res;
     }
     //  监控二叉树   https://leetcode.cn/problems/binary-tree-cameras/
-    //未完成
+    //后序处理，
     int result;
     private  int travealsal(TreeNode cur){
         //空节点,该节点有覆盖
@@ -371,12 +371,25 @@ public class tanxin {
         if(left==1||right==1) return 2;
         return -1;
     }
+    //简化版本
+    private int travealsal1(TreeNode cur){
+        if(cur==null) return 2;
+        int left=travealsal1(cur.left);
+        int right=travealsal1(cur.right);
+        if(left==2&&right==2) return 0;
+        else if(left==0||right==0){
+            result++;
+            return 1;
+        }
+        else  return 2;
+    }
     public int minCameraCover(TreeNode root) {
         result=0;
         //case 4
-        if(travealsal(root)==0){
+        if(travealsal1(root)==0){
             result++;
         }
         return result;
     }
+
 }

@@ -344,7 +344,39 @@ public class tanxin {
     }
     //  监控二叉树   https://leetcode.cn/problems/binary-tree-cameras/
     //未完成
+    int result;
+    private  int travealsal(TreeNode cur){
+        //空节点,该节点有覆盖
+        if(cur==null) return 2;
+        int left=travealsal(cur.left);
+        int right= travealsal(cur.right);
+
+        //case 1
+        //左右节点都有覆盖
+        if(left==2&&right==2) return 0;
+        //case2
+        //left==0 &&right==0 都无覆盖
+        //left==1 &&right==0左节点有摄像头，右没有
+        //left==0 &&right==1左没有，右有
+        //left==0 &&right==2 左没有，右被覆盖
+        //left==2 &&right==0 左覆盖，右没有
+        if(left==0||right==0){
+            result++;
+            return 1;
+        }
+        //case 3
+        //left==1 &&right==2 左节点有摄像头,右节点被覆盖
+        //left==2 &&right==1左节点被覆盖，右节点有摄像头
+        //left==1 &&right==1 左右都有摄像头
+        if(left==1||right==1) return 2;
+        return -1;
+    }
     public int minCameraCover(TreeNode root) {
-        return 0;
+        result=0;
+        //case 4
+        if(travealsal(root)==0){
+            result++;
+        }
+        return result;
     }
 }

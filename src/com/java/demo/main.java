@@ -227,7 +227,8 @@ public class main {
         //treeNode3.right=treeNode4;
         //Solution x=new Solution();
         tree tr=new tree();
-        System.out.println(tr.rob(treeNode));
+        tanxin tan=new tanxin();
+        System.out.println(tan.minCameraCover(treeNode));
 //        System.out.println(x.isBalanced(treeNode));
 //        ntree hha=new ntree();
 //        int num1[]=new int[]{3,9,20,15,7};

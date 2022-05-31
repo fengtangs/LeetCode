@@ -224,7 +224,7 @@ public class main {
         treeNode.right=treeNode2;
         treeNode.left=treeNode1;
         treeNode2.right=treeNode3;
-        //treeNode3.right=treeNode4;
+        treeNode3.right=treeNode4;
         //Solution x=new Solution();
         tree tr=new tree();
         tanxin tan=new tanxin();

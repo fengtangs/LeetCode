@@ -1,0 +1,7 @@
+1. 本地同步到远程
+git init
+git clone "url"
+把本地文件复制过来
+git add .
+git commit -m "说明"
+git push

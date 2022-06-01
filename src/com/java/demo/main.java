@@ -228,11 +228,15 @@ public class main {
         //Solution x=new Solution();
         tree tr=new tree();
         tanxin tan=new tanxin();
-        System.out.println(tan.minCameraCover(treeNode));
 //        System.out.println(x.isBalanced(treeNode));
 //        ntree hha=new ntree();
 //        int num1[]=new int[]{3,9,20,15,7};
-//        int num2[]=new int[]{9,3,15,20,7};
+        int num2[]=new int[]{9,3,15,20,7,7};
+        sort s=new sort();
+        s.quick_sort(num2);
+        for(int i=0;i<num2.length;i++)
+            System.out.print(num2[i]+"\t");
+        System.out.println();
 
 //        res=x.merge(ttt);
 //        x.pretree(treeNode);

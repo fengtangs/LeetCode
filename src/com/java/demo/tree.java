@@ -6,6 +6,8 @@ package com.java.demo;
  * author：nsf
  * cite form 代码随想录
  */
+import java.beans.PropertyEditorSupport;
+import java.lang.reflect.Array;
 import java.util.*;
 //二叉树节点定义 TreeNode root =new TreeNode();
 class TreeNode {
@@ -564,6 +566,219 @@ public class tree {
     public int rob(TreeNode root) {
         int[] res = robtree(root);
         return Math.max(res[0],res[1]);
+    }
+    //二叉搜索树中的搜索 https://leetcode.cn/problems/search-in-a-binary-search-tree/
+    public TreeNode searchBST(TreeNode root, int val) {
+        if(root==null||root.val==val) return root;
+        if(val< root.val) return searchBST(root.left,val);
+        return searchBST(root.right,val);
+    }
+    //验证二叉搜索树 https://leetcode.cn/problems/validate-binary-search-tree/
+    TreeNode pre=null;
+    //错误方法，这个[5,4,6,null,null,3,7]无法判断
+    public boolean isValidBST(TreeNode root) {
+        if(root==null) return true;
+        if(root.left!=null) {
+            if(root.left.val>= root.val){
+                return false;
+            }
+        }
+        if(root.right!=null) {
+            if(root.right.val<= root.val){
+                return false;
+            }
+        }
+        if(isValidBST(root.right)==true&&isValidBST(root.right)==true) return true;
+        return false;
+    }
+    //正确方法，使用中序遍历方法判断，因为中序遍历就是有序的
+    public boolean isValidBST1(TreeNode root) {
+        if (root == null) return true;
+        boolean l = isValidBST1(root.left);
+        if (pre != null && pre.val >= root.val) return false;
+        pre = root;
+        boolean r = isValidBST1(root.right);
+        return l && r;
+    }
+    // 二叉搜索树的最小差值 https://leetcode.cn/problems/minimum-absolute-difference-in-bst/
+    //方法1.1递归
+    int mincha=Integer.MAX_VALUE;
+    private void traversal(TreeNode root){
+        if(root==null) return ;
+        traversal(root.left);
+        if(pre!=null){
+            mincha=Math.min(mincha, root.val- pre.val);
+        }
+        pre=root;
+        traversal(root.right);
+    }
+    public int getMinimumDifference0(TreeNode root) {
+        traversal(root);
+        return mincha;
+    }
+        //方法1.2递归
+    public int getMinimumDifference1(TreeNode root) {
+        if(root==null) return mincha;
+        int l=getMinimumDifference1(root.left);
+        if(pre!=null&&mincha>(Math.abs(pre.val-root.val))){
+            mincha=Math.abs(pre.val-root.val);
+        }
+        pre=root;
+        int r=getMinimumDifference1(root.right);
+        mincha=Math.min(l,mincha);
+        mincha=Math.min(r,mincha);
+        return mincha;
+    }
+    //方法2  迭代，中序遍历
+    public int getMinimumDifference2(TreeNode root) {
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode pre=null;
+        TreeNode cur=root;
+        int Mincha=Integer.MAX_VALUE;
+        while(!stack.isEmpty()||cur!=null){
+            if(cur!=null){
+                stack.push(cur);
+                cur=cur.left;
+            }else{
+                TreeNode t=stack.pop();
+                if(pre!=null){
+                    Mincha=Math.min(Mincha,t.val- pre.val);
+                }
+                pre=t;
+                cur=t.right;
+            }
+        }
+        return Mincha;
+    }
+
+    //二叉搜索树中的众数 https://leetcode.cn/problems/find-mode-in-binary-search-tree/
+    public int[] findMode(TreeNode root) {
+        if(root.left==null&&root.right==null) {
+            return new int[]{root.val};
+        }
+        List<Integer> res=new ArrayList();
+        int curmax=0;
+        int preval= Integer.MIN_VALUE;
+        int summax=0;
+        Stack<TreeNode> stack =new Stack<>();
+        TreeNode cur=root;
+        while(cur!=null||!stack.isEmpty()){
+            if(cur!=null){
+                stack.push(cur);
+                cur=cur.left;
+            }else {
+                    TreeNode t=stack.pop();
+                    if(preval==Integer.MIN_VALUE){
+                        curmax=1;
+                    }
+                    else if(preval==t.val){
+                        curmax++;}
+                    else {
+                        curmax=1;}
+                    if(curmax>=summax){
+                        if(curmax==summax){
+                            res.add(t.val);
+                        }
+                        else {
+                            res.clear();
+                            summax = curmax;
+                            res.add(t.val);
+                        }
+                    }
+                    preval=t.val;
+                    cur=t.right;
+            }
+        }
+        return res.stream().mapToInt(Integer::valueOf).toArray();
+    }
+    //二叉树的最近公共祖先 https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==p||root==q||root==null) return root;
+        TreeNode left=lowestCommonAncestor(root.left,p,q);
+        TreeNode right=lowestCommonAncestor(root.right,p,q);
+        if(left!=null&&right!=null) return root;
+        if(left==null&&right!=null) return right;
+        if(left!=null&&right==null) return left;
+        return null;
+    }
+    //改为搜索树，就简单了，因为有序。https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/
+    public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q) {
+        if(root.val>p.val&&root.val>q.val){
+            return lowestCommonAncestor1(root.left,p,q);
+        }else if(root.val<p.val&&root.val<q.val){
+            return lowestCommonAncestor1(root.right,p,q);
+        }
+        return root;
+    }
+    //搜索树中的插入操作 https://leetcode.cn/problems/insert-into-a-binary-search-tree/
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if(root==null) return new TreeNode(val);
+        TreeNode v=new TreeNode(val);
+        TreeNode t=root;
+        while(t!=null){
+            if(v.val<t.val){
+                if(t.left!=null)
+                    t=t.left;
+                else{
+                    t.left=v;
+                    return root;
+                }
+
+            }
+            if(v.val>t.val){
+                if(t.right!=null)
+                    t=t.right;
+                else{
+                    t.right=v;
+                    return root;
+                }
+
+            }
+        }
+        return root;
+    }
+    //删除二叉搜索树中的节点  https://leetcode.cn/problems/delete-node-in-a-bst/
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root==null) return null;
+        TreeNode pre=root;
+        int f=0;
+        TreeNode t=root;
+        while(t!=null){
+            if(t.val<key){
+                pre=t;
+                t=t.right;
+
+                f=1;
+            }
+            if(t.val>key){
+                pre=t;
+                t=t.left;
+                f=0;
+            }
+            if(t.val==key){
+                if(t.right==null){
+                    if(t.left==null) {
+                        if(f==0) pre.left=null;
+                        else pre.right=null;
+                        return root;
+                    }
+                    else{
+                        if(f==0) pre.left=t.left;
+                        else pre.right=t.left;
+                        return root;
+                    }
+                }
+                else {
+                    if(f==0){
+                        pre.left=t.right;
+                        t.left.right=t.right.left;
+                        t.right.left=null;
+
+                    }
+                }
+            }
+        }
+        return root;
     }
 
 }

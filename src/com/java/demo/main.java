@@ -233,7 +233,7 @@ public class main {
 //        int num1[]=new int[]{3,9,20,15,7};
         int num2[]=new int[]{9,3,15,20,7,7};
         sort s=new sort();
-        s.quick_sort(num2);
+        s.guibing_sort(num2);
         for(int i=0;i<num2.length;i++)
             System.out.print(num2[i]+"\t");
         System.out.println();

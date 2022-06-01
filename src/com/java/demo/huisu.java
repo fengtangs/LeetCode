@@ -87,7 +87,8 @@ public class huisu {
         }
     }
 
-    // 组合总和 https://leetcode.cn/problems/combination-sum/
+    // 组合总和2 https://leetcode.cn/problems/combination-sum/
+    //注意在，这个答案改成了去掉重复组合的答案了
     boolean[] used=new boolean[101];
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
             res.clear();

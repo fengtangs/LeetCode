@@ -214,7 +214,7 @@ public class main {
 
           int[][]ttt=new int[][]{{9,12},{1,10},{4,11},{8,12},{3,9},{6,9},{6,7}};
         int[][] n=new int[][]{{1,2},{1,3},{2,3},{3,4}};
-        int nums2[]=new int[]{10,1,2,7,6,1,5};
+        int nums2[]=new int[]{10,1,2,7,6,1,5,1};
 //        int resu[]=new int[2];
         TreeNode treeNode=new TreeNode(0);
         TreeNode treeNode1=new TreeNode(1);

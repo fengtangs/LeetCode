@@ -214,7 +214,7 @@ public class main {
 
           int[][]ttt=new int[][]{{9,12},{1,10},{4,11},{8,12},{3,9},{6,9},{6,7}};
         int[][] n=new int[][]{{1,2},{1,3},{2,3},{3,4}};
-//        int nums2[]=new int[]{1,3,2};
+        int nums2[]=new int[]{10,1,2,7,6,1,5};
 //        int resu[]=new int[2];
         TreeNode treeNode=new TreeNode(0);
         TreeNode treeNode1=new TreeNode(1);
@@ -231,13 +231,14 @@ public class main {
 //        System.out.println(x.isBalanced(treeNode));
 //        ntree hha=new ntree();
 //        int num1[]=new int[]{3,9,20,15,7};
-        int num2[]=new int[]{9,3,15,20,7,7};
-        sort s=new sort();
-        s.guibing_sort(num2);
-        for(int i=0;i<num2.length;i++)
-            System.out.print(num2[i]+"\t");
-        System.out.println();
-
+//        int num2[]=new int[]{9,3,15,20,7,7};
+//        sort s=new sort();
+//        s.guibing_sort(num2);
+//        for(int i=0;i<num2.length;i++)
+//            System.out.print(num2[i]+"\t");
+//        System.out.println();
+        huisu h=new huisu();
+        System.out.println(h.combinationSum(nums2,8));
 //        res=x.merge(ttt);
 //        x.pretree(treeNode);
 //        x.midtree(treeNode);

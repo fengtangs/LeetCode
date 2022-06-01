@@ -738,47 +738,58 @@ public class tree {
         return root;
     }
     //删除二叉搜索树中的节点  https://leetcode.cn/problems/delete-node-in-a-bst/
+    //未掌握
     public TreeNode deleteNode(TreeNode root, int key) {
-        if(root==null) return null;
-        TreeNode pre=root;
-        int f=0;
-        TreeNode t=root;
-        while(t!=null){
-            if(t.val<key){
-                pre=t;
-                t=t.right;
-
-                f=1;
-            }
-            if(t.val>key){
-                pre=t;
-                t=t.left;
-                f=0;
-            }
-            if(t.val==key){
-                if(t.right==null){
-                    if(t.left==null) {
-                        if(f==0) pre.left=null;
-                        else pre.right=null;
-                        return root;
+        if(root==null) return root;//没有找到，直接返回
+        if(root.val==key) {
+            //左孩子为空，右孩子不空，删除节点，右孩子补位，
+            if(root.left==null) return root.right;
+            else if(root.right==null) return root.left;
+            else{
+                    TreeNode cur=root.right;
+                    while(cur.left!=null){
+                        cur=cur.left;
                     }
-                    else{
-                        if(f==0) pre.left=t.left;
-                        else pre.right=t.left;
-                        return root;
-                    }
-                }
-                else {
-                    if(f==0){
-                        pre.left=t.right;
-                        t.left.right=t.right.left;
-                        t.right.left=null;
-
-                    }
-                }
+                    cur.left=root.left;
+                    TreeNode tmp=root;
+                    root=root.right;
+                    return root;
             }
         }
+        if(root.val>key) root.left=deleteNode(root.left,key);
+        if(root.val<key) root.right=deleteNode(root.right,key);
         return root;
+    }
+    //迭代
+    public TreeNode deleteNode1(TreeNode root, int key) {
+        if(root==null) return root;
+        TreeNode cur=root;
+        TreeNode pre=null;
+        while(cur!=null){
+            if(cur.val==key) break;
+            pre=cur;
+            if(cur.val>key) cur=cur.left;
+            else cur=cur.right;
+        }
+        if(pre==null) return deleteOneNode(cur);
+        if(pre.left!=null&&pre.left.val==key){
+            pre.left=deleteOneNode(cur);
+        }
+        if(pre.right!=null&&pre.right.val==key){
+            pre.right=deleteOneNode(cur);
+        }
+        return root;
+    }
+
+    private TreeNode deleteOneNode(TreeNode cur) {
+        if(cur==null) return cur;
+        if(cur.right==null) return cur.left;
+        TreeNode c=cur.right;
+        while(c.left!=null){
+            c=c.left;
+        }
+        c.left=cur.left;
+        return cur.right;
     }
 
 }

@@ -149,4 +149,43 @@ public class huisu {
         backtracking4(s,0);
         return resstring;
     }
+    //复原IP地址 https://leetcode.cn/problems/restore-ip-addresses/
+    List<String> resip=new ArrayList<>();
+    private void backtracking5(StringBuilder s, int sindex,int numofpoint){
+        if(numofpoint==3){
+            if(isvaild(s,sindex,s.length()-1)){
+                resip.add(new String(s.toString()));
+            }
+            return;
+        }
+        for(int i=sindex;i<s.length();i++){
+            if(isvaild(s,sindex,i)){
+                s.insert(i+1,'.');
+                numofpoint++;
+                backtracking5(s,i+2,numofpoint);
+                numofpoint--;
+                s.delete(i+1,i+2);
+
+            }
+            else break;
+        }
+    }
+    private boolean isvaild(StringBuilder s,int sindex,int endindex){
+        if(sindex>endindex) return false;
+        if(s.charAt(sindex)=='0'&&sindex!=endindex) return false;
+        int num=0;
+        for(int i=sindex;i<=endindex;i++){
+            if(s.charAt(i)>'9'||s.charAt(i)<'0')return false;
+            num=num*10+(s.charAt(i)-'0');
+            if(num>255)return false;
+        }
+        return true;
+    }
+    public List<String> restoreIpAddresses(String s) {
+        StringBuilder news=new StringBuilder(s);
+        resip.clear();
+        if(s.length()>12) return resip;
+        backtracking5(news,0,0);
+        return resip;
+    }
 }

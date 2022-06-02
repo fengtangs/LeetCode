@@ -238,7 +238,7 @@ public class main {
 //            System.out.print(num2[i]+"\t");
 //        System.out.println();
         huisu h=new huisu();
-        System.out.println(h.partition("bbbbbbbbbbbbb"));
+        System.out.println(h.restoreIpAddresses("25525511135"));
 //        res=x.merge(ttt);"bbbbbbbbbbbbbbbb"
 //        x.pretree(treeNode);
 //        x.midtree(treeNode);

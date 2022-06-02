@@ -117,4 +117,36 @@ public class huisu {
             path=path.subList(0, path.size()-1);
         }
     }
+    //分割回文串 https://leetcode.cn/problems/palindrome-partitioning/
+    List<List<String>> resstring=new ArrayList<>();
+    List<String> strings = new ArrayList<>();
+    private void backtracking4(String s, int index) {
+        if (index >= s.length()) {
+            resstring.add(new ArrayList<>(strings));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (ispalindrome(s, index, i)) {//是回文串
+                String temp = s.substring(index, i + 1);
+                strings.add(temp);
+            } else {
+                continue;
+            }
+                backtracking4(s, i + 1);
+                strings.remove(strings.size() - 1);
+            }
+        }
+    private boolean ispalindrome(String s,int sindex,int endindex){
+        for(int i=sindex,j=endindex;i<=j;i++,j--){
+            if(s.charAt(i)!=s.charAt(j)) return false;
+        }
+        return true;
+
+    }
+    public List<List<String>> partition(String s) {
+        resstring.clear();
+        strings.clear();
+        backtracking4(s,0);
+        return resstring;
+    }
 }

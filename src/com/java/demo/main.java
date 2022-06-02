@@ -238,8 +238,8 @@ public class main {
 //            System.out.print(num2[i]+"\t");
 //        System.out.println();
         huisu h=new huisu();
-        System.out.println(h.combinationSum(nums2,8));
-//        res=x.merge(ttt);
+        System.out.println(h.partition("bbbbbbbbbbbbb"));
+//        res=x.merge(ttt);"bbbbbbbbbbbbbbbb"
 //        x.pretree(treeNode);
 //        x.midtree(treeNode);
 //        x.posttree(treeNode);

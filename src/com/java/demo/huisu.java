@@ -188,4 +188,77 @@ public class huisu {
         backtracking5(news,0,0);
         return resip;
     }
+    //求子集问题 https://leetcode.cn/problems/subsets/
+    void backtracking6(int[] nums, int startindex){
+        res.add(new ArrayList<>(path));//注意这里，必须new一个
+        if(startindex>=nums.length){
+
+            return;
+        }
+        for(int i=startindex; i< nums.length;i++){
+            path.add(nums[i]);
+            backtracking6(nums,i+1);
+            path.remove(path.size()-1);
+        }
+
+    }
+    public List<List<Integer>> subsets(int[] nums) {
+                res.clear();
+                path.clear();
+                backtracking6(nums,0);
+                return res;
+    }
+    //全排列 https://leetcode.cn/problems/permutations/
+    void backtracking7(int[] nums,boolean[] used){
+        if(path.size()==nums.length){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(used[i]==false){
+                path.add(nums[i]);
+                used[i]=true;
+                backtracking7(nums,used);
+                used[i]=false;
+                path.remove(path.size()-1);
+            }
+        }
+
+
+    }
+    public List<List<Integer>> permute(int[] nums) {
+            boolean[] used=new boolean[nums.length];
+            Arrays.fill(used,false);
+            res.clear();
+            path.clear();
+            backtracking7(nums,used);
+            return res;
+    }
+    //全排列问题2 https://leetcode.cn/problems/permutations-ii/
+    void backtracking8(int[] nums, boolean[] used){
+        if(path.size()== nums.length){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(i>0&&nums[i]==nums[i-1]&&used[i-1]==false)continue;
+            if(used[i]==false){
+                path.add(nums[i]);
+                used[i]=true;
+                backtracking8(nums,used);
+                used[i]=false;
+                path.remove(path.size()-1);
+            }
+        }
+
+    }
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        res.clear();
+        path.clear();
+        boolean[] used=new boolean[nums.length];
+        Arrays.fill(used,false);
+        Arrays.sort(nums);//为了去重
+        backtracking8(nums,used);
+        return res;
+    }
 }

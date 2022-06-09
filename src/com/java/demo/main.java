@@ -263,12 +263,15 @@ public class main {
         }
         System.out.println("success");
             huisu a=new huisu();
+                long begin=System.currentTimeMillis();
                 a.solveSudoku(board);
+                long end=System.currentTimeMillis();
                 for(int i=0;i<board.length;i++){
                     for(int  j=0;j<board[0].length;j++)
                         System.out.print(board[i][j]+" ");
                     System.out.println();
                 }
+        System.out.println(end-begin+"ms");
 
 //                char []bb=new char[]{'3'};
 //                System.out.println(bb);

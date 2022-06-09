@@ -211,23 +211,84 @@ public class main {
     public static  int q =0;
 
     public static void main(String[] args) {
+        List<String> string=new ArrayList<>();
+        string.add("nsf");
+        string.add("jfz");
+//        string.get(0),string.get(0).replace(string.get(0).charAt(2), 'x');
+        System.out.println(string);
+//        Map<String, Map<String, Integer>> targets = new HashMap();
+//        List<List<String>> tickets=new ArrayList<>();
+//        tickets.add(Arrays.asList("JFK","SFO"));
+//        tickets.add(Arrays.asList("JFK","ATL"));
+//        tickets.add(Arrays.asList("SFO","ATL"));
+//        tickets.add(Arrays.asList("ATL","JFK"));
+//        tickets.add(Arrays.asList("ATL","SFO"));
+//        tickets.sort((o1,o2)->o1.get(1).compareTo(o2.get(1)));
+//        System.out.println(tickets);
+//        for(List<String>v:tickets){
+//            // Map<出发机场, map<到达机场, 航班次数>> targets
+//            Map<String, Integer> temp=new HashMap();
+//            if(targets.containsKey(v.get(0))){
+//                temp=targets.get(v.get(0));
+//                if(temp.containsKey(v.get(1))){
+//                    temp.replace(v.get(1), temp.get(v.get(1))+1);
+//                }else{
+//                    temp.put(v.get(1),1);
+//                }
+//                targets.replace(v.get(0),temp);
+//            }
+//            else{
+//                temp.put(v.get(1),1);
+//                targets.put(v.get(0),temp);
+//            }
+//        }
+//        System.out.println(targets);
+//        for(Map<String,Integer>target: targets.values()){
+//            System.out.println(target.size());
+//        }
 
-          int[][]ttt=new int[][]{{9,12},{1,10},{4,11},{8,12},{3,9},{6,9},{6,7}};
-        int[][] n=new int[][]{{1,2},{1,3},{2,3},{3,4}};
-        int nums2[]=new int[]{10,1,2,7,6,1,5,1};
-//        int resu[]=new int[2];
-        TreeNode treeNode=new TreeNode(0);
-        TreeNode treeNode1=new TreeNode(1);
-        TreeNode treeNode2=new TreeNode(2);
-        TreeNode treeNode3=new TreeNode(2);
-        TreeNode treeNode4=new TreeNode(2);
-        treeNode.right=treeNode2;
-        treeNode.left=treeNode1;
-        treeNode2.right=treeNode3;
-        treeNode3.right=treeNode4;
-        //Solution x=new Solution();
-        tree tr=new tree();
-        tanxin tan=new tanxin();
+
+//        res.en
+//        res.replace("nsf",tem);
+//        res.put("nsf",res.get("nsf").replace());
+//        System.out.println(res);
+          char[][]board=new char[][]{{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},
+                  {'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'},};
+//          int[][]ttt=new int[][]{{9,12},{1,10},{4,11},{8,12},{3,9},{6,9},{6,7}};
+//          System.out.println(ttt[0].length);
+        for(int i=0;i<board.length;i++) {
+            for (int j = 0; j < board[0].length; j++)
+                System.out.print(board[i][j] + " ");
+            System.out.println();
+        }
+        System.out.println("success");
+            huisu a=new huisu();
+                a.solveSudoku(board);
+                for(int i=0;i<board.length;i++){
+                    for(int  j=0;j<board[0].length;j++)
+                        System.out.print(board[i][j]+" ");
+                    System.out.println();
+                }
+
+//                char []bb=new char[]{'3'};
+//                System.out.println(bb);
+//                a.test(bb);
+//                System.out.println(bb);
+//        int[][] n=new int[][]{{1,2},{1,3},{2,3},{3,4}};
+//        int nums2[]=new int[]{10,1,2,7,6,1,5,1};
+////        int resu[]=new int[2];
+//        TreeNode treeNode=new TreeNode(0);
+//        TreeNode treeNode1=new TreeNode(1);
+//        TreeNode treeNode2=new TreeNode(2);
+//        TreeNode treeNode3=new TreeNode(2);
+//        TreeNode treeNode4=new TreeNode(2);
+//        treeNode.right=treeNode2;
+//        treeNode.left=treeNode1;
+//        treeNode2.right=treeNode3;
+//        treeNode3.right=treeNode4;
+//        //Solution x=new Solution();
+//        tree tr=new tree();
+//        tanxin tan=new tanxin();
 //        System.out.println(x.isBalanced(treeNode));
 //        ntree hha=new ntree();
 //        int num1[]=new int[]{3,9,20,15,7};
@@ -237,8 +298,8 @@ public class main {
 //        for(int i=0;i<num2.length;i++)
 //            System.out.print(num2[i]+"\t");
 //        System.out.println();
-        huisu h=new huisu();
-        System.out.println(h.restoreIpAddresses("25525511135"));
+//        huisu h=new huisu();
+//        System.out.println(h.restoreIpAddresses("25525511135"));
 //        res=x.merge(ttt);"bbbbbbbbbbbbbbbb"
 //        x.pretree(treeNode);
 //        x.midtree(treeNode);

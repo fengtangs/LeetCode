@@ -792,6 +792,23 @@ public class tree {
         return cur.right;
     }
 
+    //将有序数组转换为⼆叉搜索树  https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
+    private TreeNode trvelsal(int[] nums, int left, int right){
+        if(left>right) return null;
+        int mid=left+(right-left)/2;
+        TreeNode node=new TreeNode(nums[mid]);
+        node.left = trvelsal(nums,left,mid-1);
+        node.right= trvelsal(nums,mid+1,right);
+        return node;
+
+
+
+    }
+    public TreeNode sortedArrayToBST(int[] nums) {
+    TreeNode root=trvelsal(nums,0,nums.length-1);
+    return root;
+    }
+
 }
 //二叉树变形定义
 class Node1 {

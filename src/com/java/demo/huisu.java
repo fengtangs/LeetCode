@@ -388,8 +388,5 @@ public class huisu {
     public void solveSudoku(char[][] board) {
         backtracking11(board);
     }
-
-    public void test(char[]x) {
-        x[0]='1';
-    }
+    
 }

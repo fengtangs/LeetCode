@@ -808,6 +808,39 @@ public class tree {
     TreeNode root=trvelsal(nums,0,nums.length-1);
     return root;
     }
+    //把二叉搜索树转换为累加树 https://leetcode.cn/problems/convert-bst-to-greater-tree/
+    int prevalue;
+    //递归
+    private void traversal1(TreeNode node){
+        if(node==null) return;
+        traversal1(node.right);//right
+        node.val += prevalue;//center
+        prevalue=node.val;
+        traversal1(node.left);//left
+
+    }
+    //迭代
+    private void traversal2(TreeNode root){
+        Stack<TreeNode> stack =new Stack<TreeNode>();
+        TreeNode cur=root;
+        while(cur!=null||!stack.isEmpty()){
+            if(cur!=null){
+                stack.push(cur);
+                cur=cur.right;
+            }else{
+                cur=stack.pop();
+                cur.val+=prevalue;
+                prevalue= cur.val;
+                cur=cur.left;
+
+            }
+        }
+    }
+    public TreeNode convertBST(TreeNode root) {
+            int prevalue=0;
+            traversal2(root);
+            return root;
+    }
 
 }
 //二叉树变形定义

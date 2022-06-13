@@ -215,7 +215,7 @@ public class main {
         string.add("nsf");
         string.add("jfz");
 //        string.get(0),string.get(0).replace(string.get(0).charAt(2), 'x');
-        System.out.println(string);
+        System.out.println(Math.pow(10,3));
 //        Map<String, Map<String, Integer>> targets = new HashMap();
 //        List<List<String>> tickets=new ArrayList<>();
 //        tickets.add(Arrays.asList("JFK","SFO"));
@@ -252,26 +252,26 @@ public class main {
 //        res.replace("nsf",tem);
 //        res.put("nsf",res.get("nsf").replace());
 //        System.out.println(res);
-          char[][]board=new char[][]{{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},
-                  {'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'},};
+//          char[][]board=new char[][]{{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},
+//                  {'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'},};
 //          int[][]ttt=new int[][]{{9,12},{1,10},{4,11},{8,12},{3,9},{6,9},{6,7}};
 //          System.out.println(ttt[0].length);
-        for(int i=0;i<board.length;i++) {
-            for (int j = 0; j < board[0].length; j++)
-                System.out.print(board[i][j] + " ");
-            System.out.println();
-        }
-        System.out.println("success");
-            huisu a=new huisu();
-                long begin=System.currentTimeMillis();
-                a.solveSudoku(board);
-                long end=System.currentTimeMillis();
-                for(int i=0;i<board.length;i++){
-                    for(int  j=0;j<board[0].length;j++)
-                        System.out.print(board[i][j]+" ");
-                    System.out.println();
-                }
-        System.out.println(end-begin+"ms");
+//        for(int i=0;i<board.length;i++) {
+//            for (int j = 0; j < board[0].length; j++)
+//                System.out.print(board[i][j] + " ");
+//            System.out.println();
+//        }
+//        System.out.println("success");
+//            huisu a=new huisu();
+//                long begin=System.currentTimeMillis();
+//                a.solveSudoku(board);
+//                long end=System.currentTimeMillis();
+//                for(int i=0;i<board.length;i++){
+//                    for(int  j=0;j<board[0].length;j++)
+//                        System.out.print(board[i][j]+" ");
+//                    System.out.println();
+//                }
+//        System.out.println(end-begin+"ms");
 
 //                char []bb=new char[]{'3'};
 //                System.out.println(bb);

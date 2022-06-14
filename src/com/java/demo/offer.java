@@ -179,5 +179,205 @@ public class offer {
             return res;
     }
 
+//    public boolean exist(char[][] board, String word) {
+//        int length=board.length, width=board[0].length,wordlength=word.length();
+//        boolean[][] flag=new boolean[length][width];
+////        Arrays.fill(flag,false);
+//        int i=0,j=0,k=0;
+//
+//        while(i<length&&j<width){
+//            if(board[i][j]==word.charAt(k)){
+//                k++;
+//                flag[i][j]=true;
+//                if(k==wordlength) return true;
+//            }
+//            if(j+1<width){
+//                if(board[i][j+1]==word.charAt(k)&&flag[i][j+1]==false){
+//                    k++;
+//                    j++;
+//                    flag[i][j]=true;
+//                    if(k==wordlength) return true;
+//
+//                }
+//            }
+//            if(i+1<length){
+//                if(board[i+1][j]==word.charAt(k)&&flag[i+1][j]==false){
+//                    k++;
+//                    i++;
+//                    flag[i][j]=true;
+//                    if(k==wordlength) return true;
+//
+//                }
+//            }
+//            if(j-1>=0){
+//                if(board[i][j-1]==word.charAt(k)&&flag[i][j-1]==false){
+//                    k++;
+//                    j--;
+//                    flag[i][j]=true;
+//                    if(k==wordlength) return true;
+//
+//                }
+//            }
+//            if(i-1>=0){
+//                if(board[i][j+1]==word.charAt(k)&&flag[i-1][j]==false){
+//                    k++;
+//                    i++;
+//                    flag[i][j]=true;
+//                    if(k==wordlength) return true;
+//
+//                }
+//            }
+//
+//        }
+//        return false;
+//    }
+        //. 矩阵中的路径 https://leetcode.cn/problems/ju-zhen-zhong-de-lu-jing-lcof/ https://leetcode.cn/problems/word-search/
+    public boolean exist(char[][] board, String word) {
+        if(board==null||board.length==0||board[0].length==0||word.length()> board.length* board[0].length) return false;
+        boolean[][] flag=new boolean[board.length][board[0].length];
+        for(int i=0;i< board.length;i++){
+            for(int j=0;j< board[0].length;j++){
+                if(dfs(board,word,flag, i,j,0)) return true;
+            }
+        }
+        return false;
+    }
+    private boolean dfs(char[][] board, String word,boolean[][] flag, int i,int j,int start){
+
+        if(i<0||i>=board.length||j>=board[0].length||j<0||word.charAt(start)!=board[i][j]||flag[i][j]==true) return false;
+        if(start==word.length()-1) return true;
+        flag[i][j]=true;
+        boolean temp=dfs(board, word, flag, i+1, j, start+1)||
+                dfs(board, word, flag, i, j+1, start+1)||
+                dfs(board, word, flag, i-1, j, start+1)||
+                dfs(board, word, flag, i, j-1, start+1);
+        flag[i][j]=false;
+        return temp;
+    }
+    //机器人的运动范围 https://leetcode.cn/problems/ji-qi-ren-de-yun-dong-fan-wei-lcof/
+    //这样不行，这样会导致路径不连续。
+    public int movingCount1(int m, int n, int k) {
+        int res=0;
+        if(k==0) return 1;
+        for(int i=0;i<m;i++){
+            int t1=i,sum=0;
+            while(t1!=0){
+                sum+=t1%10;
+                t1/=10;
+            }
+            if(sum<=k){
+                for(int j=0;j<n;j++){
+                    t1=j;
+                    int t=0;
+                    while(t1!=0){
+                        t=t1%10;
+                        t1/=10;
+                    }
+                    if(t+sum<=k) res++;
+                    else break;
+                }
+            }
+
+        }
+        return res;
+    }
+    private int dfs1(boolean[][] flag, int i,int j,int m,int n,int k){
+
+        if(i<0||j<0||j>=n||i>=m||flag[i][j]==true||(i/10+i%10+j/10+j%10)>k) return 0;
+        flag[i][j]=true;
+        return dfs1(flag, i+1, j, m, n, k)+
+                dfs1(flag, i, j+1, m, n, k)+
+                dfs1(flag, i-1, j, m, n, k)+
+                dfs1(flag, i, j-1, m, n, k)+1;
+
+    }
+    public int movingCount(int m, int n, int k) {
+        boolean[][] flag=new boolean[m][n];
+        return dfs1(flag,0,0,m,n,k);
+
+
+
+    }
+
+    // 剪绳子 https://leetcode.cn/problems/jian-sheng-zi-lcof/
+    public int cuttingRope(int n) {
+            int[] dp =new int[n+1];
+            if(n<=2) return 1;
+            dp[1]=1;
+            dp[2]=1;
+        for(int i=3;i<n+1;i++){
+            for(int j=1;j<i;j++){
+                //j即是将n从第j处分割
+                //Math.max(j*(i-j),j*dp[i-j]) 中 j*(i-j)指的是分割一次后的乘积；j*dp[i-j]指
+                //分割一次后，剩余部分继续分割后的最大乘积,前面已经求解过，所以只需要取结果
+                //下面综合起来就是，但j取不同时，与前一次j取值后的dp[i]比较，取最大值，直到j遍历完
+                dp[i]=Math.max(dp[i],Math.max(j*(i-j),j*dp[i-j]));
+            }
+        }
+        return dp[n];
+    }
+    //剪绳子2  https://leetcode.cn/problems/jian-sheng-zi-ii-lcof/comments/
+    public int cuttingRope1(int n) {
+        if(n == 2)
+            return 1;
+        if(n == 3)
+            return 2;
+        long res = 1;
+        while(n > 4){
+            res *= 3;
+            res = res % 1000000007;
+            n -= 3;
+        }
+        return (int)(res * n % 1000000007);
+    }
+
+    public double myPow(double x, int n) {
+        if(n==0) return 1;
+        if(n==1) return x;
+        if(n==-1) return 1/x;
+        double res=x;
+        int nn=Math.abs(n);
+        while(nn>1){
+            res*=x;
+            nn--;
+        }
+        if(n>0){
+            return res;
+        }
+        return 1/res;
+    }
+    //删除链表的节点 https://leetcode.cn/problems/shan-chu-lian-biao-de-jie-dian-lcof/
+    public ListNode deleteNode(ListNode head, int val) {
+            ListNode pre=head, h=head;
+            if(h.val==val) return head.next;
+            while(h!=null){
+                if(h.val==val){
+                    pre.next=h.next;
+                    return head;
+                }
+                else{
+                    pre=h;
+                    h=h.next;
+                }
+
+            }
+            return head;
+    }
+
+    // 调整数组顺序使奇数位于偶数前面 https://leetcode.cn/problems/diao-zheng-shu-zu-shun-xu-shi-qi-shu-wei-yu-ou-shu-qian-mian-lcof/
+    public int[] exchange(int[] nums) {
+        int length=nums.length,head=0;
+        int tail=length-1;
+        if(length==0||length==1) return nums;
+        while(head!=tail){
+            if(nums[head]%2==1) head++;
+            else{
+                int t=nums[head];
+                nums[head]=nums[tail];
+                nums[tail--]=t;
+            }
+        }
+        return nums;
+    }
 
 }

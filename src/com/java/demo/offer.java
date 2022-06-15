@@ -379,5 +379,121 @@ public class offer {
         }
         return nums;
     }
+//    // 表示数值的字符串  https://leetcode.cn/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/
+//    public boolean isNumber(String s) {
+//        boolean xiaoshu=false,e=false;
+//        for(int i=0;i<s.length();i++){
+//            if(s.charAt(i)<='9'&&s.charAt(i)>='0')
+//        }
+//    }
+    //链表中倒数第k个节点 https://leetcode.cn/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
+    public ListNode getKthFromEnd(ListNode head, int k) {
+        ListNode quick=head,slow=head;
+        int t=1;
+        while(quick!=null&&t!=k){
+            quick=quick.next;
+            t++;
+        }
+        while(quick.next!=null){
+            quick=quick.next;
+            head=head.next;
+        }
+        return head;
+    }
+    //合并两个有序链表 https://leetcode.cn/problems/merge-two-sorted-lists/
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if(list1==null) return list2;
+        if(list2==null) return list1;
+        ListNode newhead=new ListNode(0);
+        ListNode t=newhead;
+        while(list1!=null&&list2!=null){
+            if(list1.val< list2.val) {
+                t.next=list1;
+                t=t.next;
+                list1=list1.next;
+            }
+            else{
+                t.next=list2;
+                t=t.next;
+                list2=list2.next;
+            }
+
+    }
+        // 任一为空，直接连接另一条链表
+        if (list1 == null) {
+            t.next = list2;
+        } else {
+            t.next = list1;
+        }
+        return newhead.next;
+
+    }
+    //镜像二叉树
+    public TreeNode mirrorTree(TreeNode root) {
+        if(root==null) return null;
+        mirrorTree(root.right);
+        TreeNode temp=root.right;
+        root.right=root.left;
+        root.left=temp;
+        mirrorTree(root.right);
+        return root;
+    }
+    //顺时针打印矩阵 https://leetcode.cn/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/
+    public int[] spiralOrder(int[][] matrix) {
+        if(matrix.length==0) return new int[0];
+        int lenth=matrix.length*matrix[0].length;
+        int[] res=new int[lenth];
+        int count=0;
+        int rl = 0, rh = matrix.length-1; //记录待打印的矩阵上下边缘
+        int cl = 0, ch = matrix[0].length-1; //记录待打印的矩阵左右边缘
+        while(count<lenth){
+            for(int i=cl;i<=ch;i++) res[count++]=matrix[rl][i];
+            if(count>lenth-1) break;
+            rl++;
+            for(int i=rl;i<=rh;i++) res[count++]=matrix[i][ch];
+            if(count>lenth-1) break;
+            ch--;
+            for(int i=ch;i>=cl;i--) res[count++]=matrix[rh][i];
+            if(count>lenth-1) break;
+            rh--;
+            for(int i=rh;i>=rl;i--) res[count++]=matrix[i][cl];
+            if(count>lenth-1) break;
+            cl++;
+        }
+        return res;
+    }
+        //包含min函数的栈 https://leetcode.cn/problems/bao-han-minhan-shu-de-zhan-lcof/ https://leetcode.cn/problems/min-stack/
+    class MinStack {
+
+        /** initialize your data structure here. */
+        Stack<Integer> stack;
+        int min;
+        public MinStack() {
+            stack=new Stack<Integer>();
+            min=Integer.MAX_VALUE;
+        }
+
+        public void push(int x) {
+            stack.push(min);
+            if(x<min) min=x;
+            stack.push(x);
+        }
+
+        public void pop() {
+                stack.pop();
+                min=stack.pop();
+
+
+        }
+
+        public int top() {
+            return stack.peek();
+        }
+
+        public int min() {
+            return min;
+        }
+    }
+
 
 }

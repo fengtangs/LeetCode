@@ -494,6 +494,57 @@ public class offer {
             return min;
         }
     }
+    // 圆圈中最后剩下的数字 https://leetcode.cn/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/
+    //不行，会超时
+    public int lastRemaining(int n, int m) {
+        if(n==1) return 0;
+        boolean[] flag = new boolean[n];
+        Arrays.fill(flag,false);
+        int r=n,i=-1,t=0;
+        while(r!=0){
+            i=(i+1)%n;
+            if(flag[i]==false){
+                t++;
+            }
+            if(t==m) {
+                t = 0;
+                flag[i] = true;
+                r--;
+//                System.out.println(i);
+            }
 
+        }
+        return i;
+    }
+//    ArrayList<Integer> list = new ArrayList<>(n);
+//        for (int i = 0; i < n; i++) {
+//        list.add(i);
+//    }
+//    int idx = 0;
+//        while (n > 1) {
+//        idx = (idx + m - 1) % n;
+//        list.remove(idx);
+//        n--;
+//    }
+//        return list.get(0);
+
+
+    //数组中出现次数超过一半的数字 https://leetcode.cn/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/
+    //  https://leetcode-cn.com/problems/majority-element/
+    public int majorityElement(int[] nums) {
+        int num=nums[0];
+        int count=1;
+        for(int i=1;i<nums.length;i++){
+            if(nums[i]!=num){
+                    count--;
+                if(count==0) {
+                    num = nums[i+1];
+                }
+            }
+            else
+                count++;
+        }
+        return num;
+    }
 
 }

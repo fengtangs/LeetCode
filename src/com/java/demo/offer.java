@@ -547,4 +547,188 @@ public class offer {
         return num;
     }
 
+        int index=0;
+        // 整数的格式可以用[+|-]B表示, 其中B为无符号整数
+        //这个题还没有做出来
+        private boolean scanInteger(String s){
+            if(index==s.length()) return true;
+            if(s.charAt(index) == '+' || s.charAt(index) == '-')
+                ++index;
+            return scanUnsignedInteger(s);
+        }
+        private boolean scanUnsignedInteger(String s){
+            int befor = index;
+            while(index != s.length() && s.charAt(index) >= '0' &&  s.charAt(index) <= '9')
+                index ++;
+            return index > befor;
+        }
+        // 数字的格式可以用A[.[B]][e|EC]或者.B[e|EC]表示，
+        // 其中A和C都是整数（可以有正负号，也可以没有），而B是一个无符号整数
+
+        public boolean isNumber(String s) {
+            if(s.equals("0e")) return false;
+            if(s.equals(".")) return false;
+            if(s.length() == 0)
+                return false;
+//            int index = 0;
+            //字符串开始有空格，可以返回true
+            while(index!=s.length()&& s.charAt(index) == ' ')  //书中代码没有该项测试
+                ++index;
+            if(index==s.length()) return false;
+            boolean numeric = scanInteger(s);
+            if(index==s.length()){
+                return numeric;
+            }
+            // 如果出现'.'，接下来是数字的小数部分
+            if(s.charAt(index) == '.'){
+                ++index;
+                if(index==s.length()) return true;
+                // 下面一行代码用||的原因：
+                // 1. 小数可以没有整数部分，例如.123等于0.123；
+                // 2. 小数点后面可以没有数字，例如233.等于233.0；
+                // 3. 当然小数点前面和后面可以有数字，例如233.666
+                numeric = scanUnsignedInteger(s) || numeric;
+            }
+            // 如果出现'e'或者'E'，接下来跟着的是数字的指数部分
+            if(index==s.length()) return false;
+            if( s.charAt(index) == 'e' ||  s.charAt(index) == 'E'){
+                ++index;
+                // 下面一行代码用&&的原因：
+                // 1. 当e或E前面没有数字时，整个字符串不能表示数字，例如.e1、e1；
+                // 2. 当e或E后面没有整数时，整个字符串不能表示数字，例如12e、12e+5.4
+                numeric = numeric && scanInteger(s);
+            }
+            //字符串结尾有空格，可以返回true
+            if(index<s.length()){
+                while( s.charAt(index) == ' ')
+                    ++index;
+            }
+
+            return numeric && index == s.length();//最后看是否所有部分都符合，如1a3只会检测第一部分是整数然后是a就不会继续检测了，index!=size，所以返回false
+        }
+
+        //https://leetcode.cn/problems/zheng-ze-biao-da-shi-pi-pei-lcof/
+        public boolean isMatch(String s, String p) {
+            if(p.length()==0&&s.length()==0) return true;
+            if(p.length()==0) return false;
+            boolean[][] dp=new boolean[s.length()+1][p.length()+1];
+            dp[0][0]=true;
+            for(int i=1;i<p.length()+1;i++){
+                if(i>1){
+                    if(p.charAt(i-1)=='*'){
+                        dp[0][i]=dp[0][i-2];
+                    }
+                    else {
+                        dp[0][i]=false;
+                    }
+                }
+                else {
+                    if(p.charAt(i-1)=='*'){
+                        dp[0][i]=true;
+                    }
+                }
+
+            }
+            for(int i=1;i<s.length()+1;i++){
+                for(int j=1;j<p.length()+1;j++){
+                    if(s.charAt(i-1)==p.charAt(j-1)||p.charAt(j-1)=='.'){
+                        dp[i][j]=dp[i-1][j-1];
+                    }
+                    else if(p.charAt(j-1)=='*'){
+                        if(j>1){
+                            if(dp[i][j-2]){
+                                dp[i][j]=true;
+                            }
+                            else {
+                                if(p.charAt(j-2)==s.charAt(i-1)||p.charAt(j-2)=='.'){
+                                    dp[i][j]=dp[i-1][j];
+                                }
+                            }
+                        }
+                    }
+                }//end for_1
+            }//end for_whole
+
+            return dp[s.length()][p.length()];
+        }
+
+    //https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+            if(A==null||B==null) return false;
+            return compare(A,B)||isSubStructure(A.left, B)||isSubStructure(A.right,B);
+
+    }
+    private boolean search(TreeNode A, TreeNode B){
+            if(A.val==B.val&&compare(A,B)){
+                return true;
+            }
+            return search(A.left, B)||search(A.right,B);
+    }
+    private boolean compare(TreeNode A,TreeNode B){
+            if(B==null) return true;
+            if(A==null) return false;
+            return A.val==B.val&&compare(A.left,B.left)&&compare(A.right,B.left);
+    }
+
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+            Stack<Integer> stack=new Stack<Integer>();
+            int length= pushed.length,i=0,j=0;
+            while(i<length){
+                stack.push(pushed[i++]);
+                while(j<length&&!stack.isEmpty()&&stack.peek()==popped[j]){
+                    j++;
+                    stack.pop();
+                }
+            }
+            if(j==length) return true;
+            return false;
+    }
+    //https://leetcode.cn/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/
+    //层次遍历
+    public int[] levelOrder(TreeNode root) {
+        if(root==null) return new int[0];
+        Queue<TreeNode> que=new  LinkedList<TreeNode>();
+        List<Integer> res=new ArrayList<Integer>();
+        que.add(root);
+        while(!que.isEmpty()){
+            TreeNode temp=que.poll();
+            res.add(temp.val);
+            if(temp.left!=null) que.add(temp.left);
+            if(temp.right!=null) que.add(temp.right);
+
+        }
+        return res.stream().mapToInt(Integer::valueOf).toArray();
+    }
+    //https://leetcode.cn/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/
+    public List<List<Integer>> levelOrder1(TreeNode root) {
+        Queue<TreeNode> que=new  LinkedList<TreeNode>();
+        boolean flag=true;
+        List<List<Integer>> res=new ArrayList<>();
+        if(root!=null) que.add(root);
+        while(!que.isEmpty()){
+            int size=que.size();
+            List<Integer> vec=new ArrayList<>();
+            for(int i=0;i<size;i++){
+                TreeNode node=que.poll();
+                vec.add(node.val);
+                if(node.left!=null) que.add(node.left);
+                if(node.right!=null) que.add(node.right);
+            }
+            if (flag == false) {
+                flag=true;
+                Collections.reverse(vec);
+                res.add(vec);
+            }
+            else{
+                flag=false;
+                res.add(vec);
+            }
+
+        }
+        //Collections.reverse(res);
+        return res;
+    }
+
+
+
 }

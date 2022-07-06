@@ -1,8 +1,26 @@
 package com.java.demo;
 
+import sun.reflect.generics.tree.Tree;
+
 import java.util.*;
 
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
 
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val,Node _left,Node _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};
 public class offer {
     //Definition for singly-linked list.
     public class ListNode {
@@ -729,6 +747,657 @@ public class offer {
         return res;
     }
 
+    //https://leetcode.cn/problems/zi-fu-chuan-de-pai-lie-lcof/
+    //回溯
+    LinkedHashSet<String> res = new LinkedHashSet<>();
+    int j=0;
+    void backtracking(String s,boolean[] used,char [] path){
+        if(j==s.length()){
+            res.add(new String(path));
+            return;
+        }
+        for(int i=0;i<s.length();i++){
+            if(used[i]==false){
+                path[j++]=s.charAt(i);
+                used[i]=true;
+                backtracking(s,used,path);
+                used[i]=false;
+                j--;
+            }
+        }
 
+
+    }
+    public String[] permutation(String s) {
+        boolean[] used=new boolean[s.length()];
+        char[] path=new char[s.length()];
+        Arrays.fill(used,false);
+        res.clear();
+        backtracking(s,used,path);
+        return res.toArray(new String[res.size()]);
+    }
+
+    //https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/
+    public int maxSubArray(int[] nums) {
+        int max=nums[0];
+        int length=nums.length;
+        int nowmax=nums[0];
+        for(int i=1;i<length;i++){
+            if(nowmax+nums[i]>=nums[i]){
+                nowmax+=nums[i];
+            }
+            else {
+                nowmax=nums[i];
+            }
+            if(nowmax>max){
+                max=nowmax;
+            }
+        }
+        return max;
+    }
+
+
+    //https://leetcode.cn/problems/ugly-number-ii/
+    public int nthUglyNumber(int n) {
+
+        int[] res=new int[n+1];
+        res[1]=1;
+        int p2=1,p3=1,p5=1;
+        for(int i=2;i<n+1;i++){
+            int num2=res[p2]*2,num3=res[p3]*3,num5=res[p5]*5;
+            res[i]=Math.min(Math.min(num2,num3),num5);
+            if(res[i]==num2){
+                p2++;
+            }
+            if(res[i]==num3){
+                p3++;
+            }
+            if(res[i]==num5){
+                p5++;
+            }
+        }
+        return res[n];
+    }
+    public int[] twoSum(int[] nums, int target) {
+            int p=0,r=nums.length-1;
+            while(p<r){
+                int res=nums[p]+nums[r];
+                if(res==target)
+                    return new int [] {nums[p],nums[r]};
+                else if(res>target)
+                {
+                    r--;
+                }
+                else if(res<target){
+                    p++;
+                }
+            }
+            return new int[2];
+    }
+
+    private boolean cmp(TreeNode r1,TreeNode r2){
+        if(r1==null&&r2==null) return true;
+        if(r1==null||r2==null||r1.val!= r2.val) return false;
+        return cmp(r1.left,r2.right)&& cmp(r2.left,r1.right);
+    }
+    //https://leetcode.cn/problems/dui-cheng-de-er-cha-shu-lcof/
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null) return false;
+        return cmp(root.left,root.right);
+    }
+
+    //https://leetcode.cn/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/
+    public boolean verifyPostorder(int[] postorder) {
+        if (postorder.length==0) return true;
+        Stack<Integer> stack = new Stack();
+        int preval=Integer.MAX_VALUE;
+        int length=postorder.length-1;
+        for(int i=length;i>=0;i--){
+            if(postorder[i]>preval){
+                return false;
+            }
+            while(!stack.isEmpty()&&postorder[i]<stack.peek()){
+                        preval=stack.pop();
+            }
+            stack.push(postorder[i]);
+
+        }
+        return true;
+    }
+
+    //https://leetcode.cn/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/
+     public char firstUniqChar(String s) {
+        int length=s.length();
+        if(length==0) return ' ';
+        int[] flag=new int[26];
+        Arrays.fill(flag,-1);
+//        for(int i: flag){
+//            System.out.print(i+" ");
+//        }
+//         System.out.println(" ");
+         for (int i=0;i<length;i++) {
+             int  t=s.charAt(i)-'a';
+//             System.out.println(t);
+             if(flag[t]!=-1){
+                 flag[t]=-2;
+             }
+             else
+                flag[t]=i;
+         }
+//         for(int i: flag){
+//             System.out.print(i+" ");
+//         }
+//         System.out.println(" ");
+         int m=length+1;
+         int c=-1;
+         for(int i=0;i<26;i++){
+             if(flag[i]!=-1&&flag[i]!=-2){
+                 if(flag[i]<m){
+                     m=flag[i];
+                     c=i;
+                 }
+             }
+         }
+         if (c==-1) return ' ';
+         else {
+             char res= (char) ('a'+c);
+             return res;
+         }
+    }
+
+    //https://leetcode.cn/problems/shu-ju-liu-zhong-de-zhong-wei-shu-lcof/
+    class MedianFinder {
+        List<Integer> nums;
+        Queue<Integer> A,B;
+        /** initialize your data structure here. */
+        public MedianFinder() {
+//            nums=new ArrayList();
+            A=new PriorityQueue<>();
+            B=new PriorityQueue<>((x, y) -> (y - x));
+        }
+
+        public void addNum(int num) {
+//            nums.add(num);
+            if(A.size() != B.size()) {
+                A.add(num);
+                B.add(A.poll());
+            } else {
+                B.add(num);
+                A.add(B.poll());
+            }
+        }
+
+        public double findMedian() {
+            return A.size() != B.size() ? A.peek() : (A.peek() + B.peek()) / 2.0;
+//            int length=nums.size();
+//            if(length==0) return 0;
+//            Collections.sort(nums);
+//            if(length%2==0) return 0.5*(nums.get(length/2-1)+nums.get(length/2));
+//            return nums.get(length/2);
+        }
+    }
+
+    //https://leetcode.cn/problems/li-wu-de-zui-da-jie-zhi-lcof/
+    public int maxValue(int[][] grid) {
+        int dp[][] =grid;
+        for (int j = 1; j < grid[0].length; j++) {
+            dp[0][j]+=dp[0][j-1];
+        }
+        for (int j = 1; j < grid.length; j++) {
+            dp[j][0]+=dp[j-1][0];
+        }
+
+        for( int i=1;i<grid.length;i++){
+            for(int j=1;j<grid[0].length;j++){
+                    dp[i][j]=dp[i][j]+Math.max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return dp[grid.length-1][grid[0].length-1];
+    }
+
+    //https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/
+    public int search(int[] nums, int target) {
+            int res=0;
+            for(int i=0;i<nums.length;i++){
+                if(nums[i]==target) res++;
+            }
+            return res;
+    }
+
+    //https://leetcode.cn/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/comments/
+    public int[] singleNumbers(int[] nums) {
+            int t = 0;
+            for (int n : nums) {
+                t ^= n;
+            }
+            int div = 1;
+            while ((div & t) == 0) {
+                div <<= 1;
+            }
+            int a = 0, b = 0;
+            for (int n : nums) {
+                if ((div & n) != 0) {
+                    a ^= n;
+                } else {
+                    b ^= n;
+                }
+            }
+            return new int[]{a, b};
+    }
+
+    // https://leetcode.cn/problems/bu-ke-pai-zhong-de-shun-zi-lcof/
+    public boolean isStraight(int[] nums) {
+        Arrays.sort(nums);
+        int temp=0;
+        for(int i=1;i<5;i++){
+            if(nums[i-1]==0) continue;
+            if(nums[i]==nums[i-1]) return false;
+            temp+=(nums[i]-nums[i-1]);
+
+        }
+        return temp<5;
+    }
+
+    // https://leetcode.cn/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA==null||headB==null) return null;
+        ListNode l1=headA,l2=headB;
+        while(l1!=l2){
+            l1= l1==null? headA:l1.next;
+            l2= l2==null? headB:l2.next;
+        }
+        return l1;
+    }
+    //https://leetcode.cn/problems/gu-piao-de-zui-da-li-run-lcof/
+    public int maxProfit(int[] prices) {
+        if(prices.length==0) return 0;
+        int res=0;
+        int min=prices[0];
+        for(int i:prices){
+//            System.out.println(i);
+            if(min>i){
+                min=i;
+            }
+            if(res<i-min){
+                res=i-min;
+                System.out.println(res);
+            }
+        }
+        return res;
+    }
+
+    class MaxQueue {
+        ListNode queuehead;
+        ListNode queuetail;
+        int mmax;
+        int length;
+        public MaxQueue() {
+             queuehead = null;
+            queuetail = null;
+            mmax=Integer.MIN_VALUE;
+            length=0;
+        }
+
+        public int max_value() {
+            if(length==0) return -1;
+            else return mmax;
+        }
+
+        public void push_back(int value) {
+            if(mmax<value)mmax=value;
+            ListNode t = new ListNode(value);
+            if(length==0){
+                queuehead=t;
+            }else {
+                queuetail.next=t;
+            }
+            queuetail = t;
+            length += 1;
+        }
+
+        public int pop_front() {
+            if(length==0) return -1;
+            int t=queuehead.val;
+            queuehead=queuehead.next;
+            length--;
+            if(length==0){
+                queuetail=null;
+                mmax=Integer.MIN_VALUE;
+            }
+            else if(t==mmax){
+                int max=Integer.MIN_VALUE;
+                ListNode temp=queuehead;
+                while(temp!=null){
+                    if(max< temp.val){
+                        max=temp.val;
+                    }
+                    temp=temp.next;
+                }
+               mmax=max;
+            }
+            return t;
+        }
+    }
+
+    //https://leetcode.cn/problems/hua-dong-chuang-kou-de-zui-da-zhi-lcof/
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int length=nums.length;
+        if(length==0) return new int[0];
+        List<Integer> res=new ArrayList<Integer>();
+        for(int i=0;i<=length-k;i++){
+            int max=nums[i];
+            int j=i;
+            while(j<i+k){
+                if(max<nums[j])max=nums[j];
+                j++;
+            }
+            res.add(max);
+        }
+        System.out.println(res);
+        return res.stream().mapToInt(Integer::valueOf).toArray();
+    }
+
+
+    //https://leetcode.cn/problems/nge-tou-zi-de-dian-shu-lcof/
+    public double[] dicesProbability(int n) {
+        int length=n*5+1;
+        return new double[0];
+    }
+
+    //https://leetcode.cn/problems/gou-jian-cheng-ji-shu-zu-lcof/solution/gou-jian-cheng-ji-shu-zu-by-leetcode-sol-aqg2/
+    public int[] constructArr(int[] a) {
+        int length=a.length;
+        if(length<=1) return a;
+        int[] l=new int[length];
+        int [] r=new int[length];
+        l[0]=1;
+        for(int i=1;i<length;i++){
+            l[i]=a[i-1]*l[i-1];
+        }
+        r[length-1]=1;
+        for(int i=length-2;i>=0;i--){
+            r[i]=a[i+1]*r[i+1];
+        }
+        int [] res=new int[length];
+        for(int i=0;i<length;i++){
+            res[i]=l[i]*r[i];
+        }
+        return res;
+    }
+
+    //https://leetcode.cn/problems/ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu-lcof/comments/
+    public int strToInt(String str) {
+        long res=0;
+        boolean flag=false;
+        int length=str.length();
+        if(length==0) return 0;
+        int i=0;
+        System.out.println(length);
+
+        while(i<length&&str.charAt(i)==' '){
+            i++;
+        }
+        System.out.println(i);
+        if(i>=length) return 0;
+        if((str.charAt(i)!='-'&&str.charAt(i)!='+')&&(str.charAt(i)<'0'||str.charAt(i)>'9'))
+            return 0;
+        if(str.charAt(i)=='-'){
+            flag=true;
+            i++;
+        }
+
+        else if(str.charAt(i)=='+'){
+            i++;
+        }
+        while(i<length&&str.charAt(i)>='0'&&str.charAt(i)<='9'){
+            res= res*10+str.charAt(i)-'0';
+            if(flag==false&&res>Integer.MAX_VALUE){
+                return Integer.MAX_VALUE;
+            }
+            if(flag==true&& -res<Integer.MIN_VALUE)
+                return Integer.MIN_VALUE;
+            i++;
+        }
+
+    return (int) (flag? -res:res);
+
+    }
+
+    //https://leetcode.cn/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/
+    public int[][] findContinuousSequence(int target) {
+
+        List<int[]>res=new ArrayList<int[]>();
+        for(int x=1;x<=target;x++){
+            for(int n=2;n<=target-x+1;n++){
+                if((2*x+n-1)*n==2*target){
+                    int[] t=new int[n];
+                    int j=x;
+                    for(int i=0;i<n;i++){
+                       t[i]=j;
+                       j++;
+                    }
+                    res.add(t);
+                }
+                else if((2*x+n-1)*n>2*target){
+                    break;
+
+                }
+            }
+        }
+//        int [][]r=new int [res.size()][]
+//        for(int i=0;i<res.size();i++){
+//            for(int j=0;j< res.get(i).length;j++){
+//                System.out.print(res.get(i)[j]+" ");
+//            }
+//            System.out.println();
+//        }
+        return res.toArray(new int[0][]);
+    }
+
+
+    public int reversePairs(int[] nums) {
+        int res=0;
+        for(int i=0;i< nums.length-1;i++){
+            for(int j=i+1;j< nums.length;j++){
+                if(nums[i]>nums[j])
+                    res++;
+            }
+        }
+        return res;
+    }
+    //https://leetcode.cn/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/
+    int rres=0,nums=0;
+    private void youzhongzuo(TreeNode root, int k){
+        if(root==null) return;
+
+        youzhongzuo(root.right,k);
+        if(++nums==k) rres=root.val;
+
+        youzhongzuo(root.left,k);
+    }
+    public int kthLargest(TreeNode root, int k) {
+        youzhongzuo(root,k);
+        return rres;
+    }
+
+
+    //https://leetcode.cn/problems/er-cha-shu-de-shen-du-lcof/
+    public int maxDepth(TreeNode root) {
+        if(root==null) return 0;
+        Queue<TreeNode> queue=new LinkedList<>();
+        int res=0;
+        queue.add(root);
+        while(!queue.isEmpty()){
+            int size=queue.size();
+            for(int i=0;i<size;i++){
+                TreeNode t=queue.poll();
+                if(t.left!=null) queue.add(t.left);
+                if(t.right!=null) queue.add(t.right);
+            }
+            res++;
+        }
+        return res;
+    }
+
+
+    //https://leetcode.cn/problems/fan-zhuan-dan-ci-shun-xu-lcof/
+    public String reverseWords(String s) {
+        String result=new String();
+        s = s.trim();
+        int f=0;
+        String[] res=s.split("\\s+");
+        System.out.println(res.length);
+        for(int i=res.length-1;i>=0;i--){
+            if(res[i]!=" "){
+                if(f==0){
+                    result+=res[i];
+                    f=1;
+                }
+                else{
+                    result=result+" "+res[i];
+                }
+            }
+
+        }
+        return result;
+    }
+
+    // https://leetcode.cn/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/
+    public String reverseLeftWords(String s, int n) {
+        String res=new String();
+        res=s.substring(n,s.length());
+        res+=s.substring(0,n);
+        return res;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==p||root==q||root==null) return root;
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right =lowestCommonAncestor(root.right,p,q);
+        if(left!=null&&right!=null) return root;
+        if(left==null&&right!=null) return right;
+        if(left!=null&&right==null) return left;
+        return null;
+    }
+
+
+
+    //https://leetcode.cn/problems/fu-za-lian-biao-de-fu-zhi-lcof/submissions/
+//    class Node {
+//        int val;
+//        Node next;
+//        Node random;
+//
+//        public Node(int val) {
+//            this.val = val;
+//            this.next = null;
+//            this.random = null;
+//        }
+    Map<Node,Node > resmap =new HashMap<Node,Node>();
+//    public Node copyRandomList(Node head) {
+//        if(head==null)
+//            return null;
+//        if(!resmap.containsKey(head)){
+//            Node temp=new Node(head.val);
+//            resmap.put(head, temp);
+//            temp.next=copyRandomList(head.next);
+//            temp.random=copyRandomList(head.random);
+//        }
+//        return resmap.get(head);
+//    }
+    //https://leetcode.cn/problems/xu-lie-hua-er-cha-shu-lcof/
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        String res=new String();
+        Queue<TreeNode> queue=new LinkedList<TreeNode>();
+        if(root==null) return new String();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            TreeNode temp= queue.poll();
+            if(temp!=null){
+                res+=String.valueOf(temp.val)+",";
+                queue.add(temp.left);
+                queue.add(temp.right);
+            }
+            else{
+                res+="null,";
+            }
+        }
+        if(res.length()!=0) res=res.substring(0,res.length()-1);
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        return null;
+    }
+
+    Node pre,head;
+    public Node treeToDoublyList(Node root) {
+        if(root==null) return null;
+        zhuanhuan(root);
+        head.left=pre;
+        pre.right=head;
+        return head;
+    }
+    private void zhuanhuan(Node root){
+            if(root==null) return ;
+            zhuanhuan(root.left);
+            if(pre==null) head=root;
+            else if(pre!=null) pre.right=root;
+            root.left=pre;
+            pre=root;
+            zhuanhuan (root.right);
+    }
+
+    // https://leetcode.cn/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/comments/
+    public int translateNum(int num) {
+        if(num<10) return 1;
+        String nums= String.valueOf(num);
+        int[] dp =new int[nums.length()];
+        dp[0]=1;
+        dp[1]= nums.charAt(0)-'0'==1||nums.charAt(0)-'0'==2&&nums.charAt(1)-'0'<6 ?2:1;
+        for(int i=2;i<dp.length;i++){
+            dp[i]=nums.charAt(i-1)-'0'==1||nums.charAt(i-1)-'0'==2&&nums.charAt(i)-'0'<6 ?dp[i-1]+dp[i-2]:dp[i-1];
+        }
+        return dp[dp.length-1];
+    }
+
+    //https://leetcode.cn/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
+    public int findNthDigit(int n) {
+        if(n<10) return n;
+        int digit = 1;
+        long start = 1;
+        long count = 9;
+        while (n > count) { // 1.
+            n -= count;
+            digit += 1;
+            start *= 10;
+            count = digit * start * 9;
+        }
+        long num = start + (n - 1) / digit; // 2.
+        return Long.toString(num).charAt((n - 1) % digit) - '0'; // 3.
+
+    }
+
+    //https://leetcode.cn/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/
+    public int lengthOfLongestSubstring(String s) {
+        int res=0;
+        Set<Character> set=new HashSet<Character>();
+        int begin=0;
+        for(int i=0;i<s.length();i++){
+            char temp=s.charAt(i);
+            while(set.contains(temp)){//向后滑动
+                set.remove(s.charAt(begin++));
+            }
+            set.add(temp);
+            res=Math.max(res,i-begin+1);
+        }
+        return res;
+    }
+    //https://leetcode.cn/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/
+    public int countDigitOne(int n) {
+        if(n<10) return
+    }
 
 }

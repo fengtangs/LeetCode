@@ -51,7 +51,7 @@ public class tree {
         if(root.right!=null) pretree(root.right);
         System.out.print(root.val);
     }
-    //二叉树前序遍历，借助stack
+    //p，借助stack
     public int[] precengtree(TreeNode root){
         Stack<TreeNode> stack=new Stack<TreeNode>();
         List<Integer> temp=new ArrayList<>();

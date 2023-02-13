@@ -7,8 +7,6 @@ package com.java.demo;
  *
  */
 
-import com.sun.deploy.util.ArrayUtil;
-
 import java.util.*;
 
 
@@ -207,14 +205,44 @@ class Solution {
 
 
 }
+
 public class main {
-    public static  int q =0;
+        public static int longestConsecutive(int[] nums) {
+            HashSet<Integer> set =new HashSet<>();
+            for (int num : nums){
+                set.add(num);
+            }
+            int res=0;
+            int cur =0;
+            for (int num : set)
+            {
+                if (!set.contains(num-1)){
+                    cur=num;
+                    while(set.contains(cur)) {
+
+                        set.remove(cur);
+                        cur++;
+                    }
+                    res=Math.max(res,cur-num);
+                }
+            }
+            return res;
+        /*
+        HashSet+枚举每个连续序列起始元素
+        1.用HashSet保存元素并去重
+        2.遍历HashSet，当集合中不存在num-1时，说明是连续序列起始段，统计其长度
+        3.维护每个不同起始元素连续段的最大连续长度
+        时间复杂度:O(N) 空间复杂度:O(N)
+         */
+        }
 
     public static void main(String[] args) {
 
-
-        offer a=new offer();
-        System.out.println(a.strToInt(" "));
+        tenxun a=new tenxun();
+        int [] nums = new int[]{0,3,7,2,5,8,4,6,0,1};
+        System.out.println("-XX:+PrintGCDetails");
+        System.out.print(longestConsecutive(nums));
+        //        System.out.println(a.mySqrt(5));
 //        int[] nums=new int[]{1,2,1,1,2};
         //int[] res =a.singleNumbers(new int[]{1, 2, 10, 4, 1, 4, 3, 3});
 //        for(int i:res){

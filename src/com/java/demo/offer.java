@@ -1,7 +1,5 @@
 package com.java.demo;
 
-import sun.reflect.generics.tree.Tree;
-
 import java.util.*;
 
 class Node {
@@ -20,7 +18,7 @@ class Node {
         left = _left;
         right = _right;
     }
-};
+}
 public class offer {
     //Definition for singly-linked list.
     public class ListNode {
@@ -1098,11 +1096,6 @@ public class offer {
     }
 
 
-    //https://leetcode.cn/problems/nge-tou-zi-de-dian-shu-lcof/
-    public double[] dicesProbability(int n) {
-        int length=n*5+1;
-        return new double[0];
-    }
 
     //https://leetcode.cn/problems/gou-jian-cheng-ji-shu-zu-lcof/solution/gou-jian-cheng-ji-shu-zu-by-leetcode-sol-aqg2/
     public int[] constructArr(int[] a) {
@@ -1329,7 +1322,22 @@ public class offer {
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        return null;
+        String[] arr = data.split(",");
+        Queue<String> queue = new LinkedList<String>();
+        for(int i = 0; i < arr.length; i++){
+            queue.offer(arr[i]);
+        }
+        return help(queue);
+    }
+    private TreeNode help(Queue<String> queue){
+        String val = queue.poll();
+        if(val.equals("null")){
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.valueOf(val));
+        root.left = help(queue);
+        root.right = help(queue);
+        return root;
     }
 
     Node pre,head;
@@ -1396,8 +1404,384 @@ public class offer {
         return res;
     }
     //https://leetcode.cn/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/
+    //不会
     public int countDigitOne(int n) {
-        if(n<10) return
+        // mulk 表示 10^k
+        // 在下面的代码中，可以发现 k 并没有被直接使用到（都是使用 10^k）
+        // 但为了让代码看起来更加直观，这里保留了 k
+        long mulk = 1;
+        int ans = 0;
+        for (int k = 0; n >= mulk; ++k) {
+            ans += (n / (mulk * 10)) * mulk + Math.min(Math.max(n % (mulk * 10) - mulk + 1, 0), mulk);
+            mulk *= 10;
+        }
+        return ans;
     }
 
+    //https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/
+    public String minNumber(int[] nums) {
+    String[] str=new String[nums.length];
+    for(int i=0;i<nums.length;i++){
+        str[i]=String.valueOf(nums[i]);
+    }
+    Arrays.sort(str,(x,y)->(x+y).compareTo(y+x));
+    String res=new String();
+    for(String i:str){
+        res+=i;
+    }
+    return res;
+
+
+    }
+
+    //https://leetcode.cn/problems/nge-tou-zi-de-dian-shu-lcof/
+    public double[] dicesProbability(int n) {
+        //因为最后的结果只与前一个动态转移数组有关，所以这里只需要设置一个一维的动态转移数组
+        //原本dp[i][j]表示的是前i个骰子的点数之和为j的概率，现在只需要最后的状态的数组，所以就只用一个一维数组dp[j]表示n个骰子下每个结果的概率。
+        //初始是1个骰子情况下的点数之和情况，就只有6个结果，所以用dp的初始化的size是6个
+        double[] dp = new double[6];
+        //只有一个数组
+        Arrays.fill(dp,1.0/6.0);
+        //从第2个骰子开始，这里n表示n个骰子，先从第二个的情况算起，然后再逐步求3个、4个···n个的情况
+        //i表示当总共i个骰子时的结果
+        for(int i=2;i<=n;i++){
+            //每次的点数之和范围会有点变化，点数之和的mid值最大是i*6，最小是i*1，i之前的结果值是不会出现的；
+            //比如i=3个骰子时，最小就是3了，不可能是2和1，所以点数之和的值的个数是6*i-(i-1)，化简：5*i+1
+            //当有i个骰子时的点数之和的值数组先假定是temp
+            double[] temp = new double[5*i+1];
+            //从i-1个骰子的点数之和的值数组入手，计算i个骰子的点数之和数组的值
+            //先拿i-1个骰子的点数之和数组的第j个值，它所影响的是i个骰子时的temp[j+k]的值
+            for(int j=0;j<dp.length;j++){
+                //比如只有1个骰子时，dp[1]是代表当骰子点数之和为2时的概率，它会对当有2个骰子时的点数之和为3、4、5、6、7、8产生影响，因为当有一个骰子的值为2时，另一个骰子的值可以为1~6，产生的点数之和相应的就是3~8；比如dp[2]代表点数之和为3，它会对有2个骰子时的点数之和为4、5、6、7、8、9产生影响；所以k在这里就是对应着第i个骰子出现时可能出现六种情况，这里可能画一个K神那样的动态规划逆推的图就好理解很多
+                for(int k=0;k<6;k++){
+                    //这里记得是加上dp数组值与1/6的乘积，1/6是第i个骰子投出某个值的概率
+                    temp[j+k]+=dp[j]*(1.0/6.0);
+                }
+            }
+            //i个骰子的点数之和全都算出来后，要将temp数组移交给dp数组，dp数组就会代表i个骰子时的可能出现的点数之和的概率；用于计算i+1个骰子时的点数之和的概率
+            dp = temp;
+        }
+        return dp;
+    }
+
+
+    public int maxAliveYear(int[] birth, int[] death) {
+        int[] res=new int[105];
+//        Arrays.fill(res,0);
+        for( int i=0;i<birth.length;i++){
+            res[birth[i]-1900]++;
+            res[death[i]-1900+1]--;
+        }
+        int max=0;
+        int tem=0,idx=0;
+        for( int i=0;i<101;i++){
+            tem+=res[i];
+            if(tem>max){
+                max=tem;
+                idx=i;
+            }
+        }
+        return idx+1900;
+    }
+
+    //https://leetcode.cn/problems/successor-lcci/comments/
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if(root==null)
+            return null;
+        if(root.val<=p.val){
+            inorderSuccessor(root.right,p);
+        }
+        TreeNode t = inorderSuccessor(root.left,p);
+        return t==null?root:t;
+    }
+
+
+    // https://leetcode.cn/problems/0H97ZC/
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        int t=arr1[0];
+        int index=0;
+        for( int i=0;i< arr2.length;i++){
+            for(int j=index;j<arr1.length;j++){
+                if(arr1[j]==arr2[i]){
+                   int tt=arr1[j];
+                   arr1[j]=arr1[index];
+                   arr1[index]=tt;
+                   index++;
+                }
+            }
+        }
+        return arr1;
+    }
+    
+
+    class CBTInserter {
+        TreeNode root;
+        public CBTInserter(TreeNode root) {
+            this.root=root;
+        }
+
+        public int insert(int val) {
+            int result = 0;
+            Queue<TreeNode> queue = new LinkedList<>();
+            queue.offer(root);
+            while(!queue.isEmpty()){
+                int size = queue.size();
+                for(int i = 0; i < size; i++){
+                    TreeNode temp = queue.poll();
+                    //满二叉树
+                    if(temp.left == null && temp.right == null){
+                        //插左边
+                        temp.left = new TreeNode(val);
+                        result = temp.val;
+                        //找到结束所有循环
+                        while(! queue.isEmpty()){
+                            queue.poll();
+                        }
+                        break;
+                    }
+                    //完全二叉树
+                    if(temp.right == null){
+                        //插右边
+                        temp.right = new TreeNode(val);
+                        result =  temp.val;
+                        //找到结束所有循环
+                        while(! queue.isEmpty()){
+                            queue.poll();
+                        }
+                        break;
+                    }
+                    //左子树不为空
+                    if(temp.left != null){
+                        queue.offer(temp.left);
+                    }
+                    //右子树不为空
+                    if(temp.right != null){
+                        queue.offer(temp.right);
+                    }
+
+                }
+            }
+            return result;
+        }
+
+        public TreeNode get_root() {
+            return root;
+        }
+    }
+    public int[] arrayRankTransform(int[] arr) {
+        int length = arr.length;
+        int []res = new int[length];
+        int [] sorted=new int[length];
+        sorted=Arrays.copyOfRange(arr,0,length);
+        Arrays.sort(sorted);
+        int count=1;
+        HashMap<Integer, Integer>hashMap=new HashMap<Integer, Integer>();
+        for(int i=0;i<length;i++){
+            if(!hashMap.containsKey(sorted[i])){
+                hashMap.put(sorted[i],count);
+                count++;
+            }
+        }
+        for(int i =0;i<length;i++){
+            res[i]=hashMap.get(arr[i]);
+        }
+        return res;
+    }
+
+
+    public String orderlyQueue(String s, int k) {
+        if(k==1){
+            String smallest=s;
+            StringBuffer stemp=new StringBuffer(s);
+            for(int i=1;i<s.length();i++){
+                char c =stemp.charAt(0);
+                stemp.deleteCharAt(0);
+                stemp.append(c);
+                if(stemp.toString().compareTo(smallest)<0){
+                    smallest = stemp.toString();
+                }
+            }
+            return smallest;
+        }else{
+            char [] ans = s.toCharArray();
+            Arrays.sort(ans);
+            return new String(ans);
+        }
+    }
+
+
+
+    //https://leetcode.cn/problems/add-one-row-to-tree/
+    public TreeNode addOneRow(TreeNode root, int val, int depth) {
+        if(depth==1||depth==0){
+            TreeNode temp =new TreeNode(val);
+            temp.left=root;
+            return temp;
+        }
+        Queue<TreeNode> q=new LinkedList<>();
+        q.add(root);
+        int nowdepth =1;
+        while(nowdepth<depth-1){
+            int size=q.size();
+            for(int j=0;j<size;j++){
+                TreeNode t=q.poll();
+                if(t.left!=null){q.add(t.left);}
+                if(t.right!=null){q.add(t.right);}
+            }
+            nowdepth++;
+        }
+        while(q.size()>0){
+            TreeNode t=q.poll();
+            TreeNode l=t.left;
+            TreeNode r=t.right;
+            t.left=new TreeNode(val);
+            t.right=new TreeNode(val);
+            t.left.left=l;
+            t.right.right=r;
+        }
+        return root;
+    }
+
+//    public String generateTheString(int n) {
+//        StringBuffer sb =new StringBuffer();
+//        if(n%2==0){
+//            return sb.append("a".repeat(n - 1)).append("b").toString();
+//        }
+//        return sb.append("a".repeat(n)).toString();
+//    }
+//public boolean validateStackSequences(int[] pushed, int[] popped) {
+//    Stack<Integer> stack=new Stack<Integer>();
+//    int j=0;
+//    for(int i=0;i<pushed.length;i++){
+//        stack.push(pushed[i]);
+//        while(!stack.isEmpty()&&stack.peek()==popped[j]){
+//            stack.pop();
+//            j++;
+//        }
+//    }
+//    return stack.isEmpty();
+//}
+
+public int kSimilarity(String s1, String s2) {
+    int n=s1.length();
+    char c[]=s2.toCharArray();
+    Map<String,Integer> map=new HashMap<>();
+    List<String> list=new ArrayList<>();
+    list.add(s1);
+    map.put(s1,0);
+    for(int i=0;i<list.size();i++){
+        String s=list.get(i);
+        char c1[]=s.toCharArray();
+        int a=map.get(s);
+        for(int j=0;j<n;j++){
+            if(c1[j]!=c[j]){
+                for(int k=j+1;k<n;k++){
+                    if(c1[k]==c[j]&&c1[k]!=c[k]){
+                        exchange(c1,j,k);
+                        String t=new String(c1);
+                        if(t.equals(s2)){return 1+a;}
+                        if(!map.containsKey(t)){
+                            list.add(t);
+                            map.put(t,a+1);
+                        }
+                        exchange(c1,j,k);
+                    }
+                }
+                break;
+            }
+        }
+    }
+    return 0;
+}
+void exchange(char c[],int x,int y){
+    char ch=c[x];
+    c[x]=c[y];
+    c[y]=ch;
+}
+
+
+
+
+
+
+        class MyLinkedList {
+
+            class ListNode {
+                int val;
+                ListNode next;
+                public ListNode() {}
+                public ListNode(int val) {this.val = val;}
+                public ListNode(int val, ListNode next) {this.val = val; this.next = next;}
+            }
+
+            int size;
+            ListNode head;
+
+            public MyLinkedList() {
+                size = 0;
+                head = new ListNode();
+            }
+
+            public int get(int index) {
+                if (index < 0 || index >= size) return -1;
+                ListNode cur = head;
+                for (int i = 0; i <= index; i++) {
+                    cur = cur.next;
+                }
+                return cur.val;
+            }
+
+            public void addAtHead(int val) {
+                addAtIndex(0, val);
+            }
+
+            public void addAtTail(int val) {
+                addAtIndex(size, val);
+            }
+
+            public void addAtIndex(int index, int val) {
+                if (index > size) return;
+                if (index < 0) index = 0;
+                size++;
+                ListNode node = new ListNode(val), cur = head;
+                for (int i = 0; i < index; i++) {
+                    cur = cur.next;
+
+                }
+                node.next = cur.next;
+                cur.next = node;
+            }
+
+            public void deleteAtIndex(int index) {
+                if (index < 0 || index >= size) return;
+                size--;
+                ListNode cur = head;
+                for (int i = 0; i < index; i++) {
+                    cur = cur.next;
+                }
+                cur.next = cur.next.next;
+            }
+        }
+
+
+    //https://leetcode.cn/problems/generate-parentheses/comments/ 括号生成
+    public List<String> generateParenthesis(int n) {
+        List<String> res =new ArrayList<String>() ;
+
+        generateresult(0,0,n,"",res);
+        return res;
+
+    }
+    private void  generateresult(int left,int right,int n,String string,List<String> res){
+        if(left>n||right>n) return;
+        if(left==n&& right==n) res.add(string);
+        else{
+            if(left>=right){
+                String s=new String(string);
+                generateresult(left+1,right,n,s+"(",res);
+                generateresult(left,right+1,n,s+")",res);
+            }
+        }
+
+    }
 }

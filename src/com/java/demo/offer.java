@@ -21,10 +21,11 @@ class Node {
 }
 public class offer {
     //Definition for singly-linked list.
-    public class ListNode {
+    public  class ListNode {
         int val;
         ListNode next;
-        ListNode(int x) { val = x; }
+        ListNode(int x) { this.val = x; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 
 

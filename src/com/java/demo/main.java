@@ -8,10 +8,17 @@ package com.java.demo;
  */
 
 import java.util.*;
-
-
 class Solution {
+    public  class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int x) { this.val = x; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
 
+         ListNode() {
+
+        }
+    }
 
     public int[] twoSum(int[] nums, int target) {
         int length= nums.length;
@@ -202,12 +209,70 @@ class Solution {
         return res;
     }
 
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode res=new ListNode();
+        ListNode p=new ListNode();
+        res.next=head;
+        p=res;
+        ListNode cur=head;
+        if (head==null)  return head;
+        while (cur!=null){
+            if(cur.val==val){
+                    p.next=cur.next;
+            }
+            else{
+                    p=cur;
+            }
+                cur=cur.next;
+        }
+        return res.next;
+    }
+    public ListNode removeElements1(ListNode head, int val) {
+        while (head!=null&&head.val==val){
+            head=head.next;
+        }
+        ListNode cur=head;
+        ListNode p=head;
+        while(cur!=null){
+            if(cur.val==val){
+                p.next=cur.next;
+            }
+            else{
+                p=cur;
+            }
+            cur=cur.next;
+        }
+        return head;
+    }
 
+    public ListNode swapPairs(ListNode head) {
+        if (head==null) return head;
+        if(head.next==null) return head;
+        ListNode newhead=new ListNode();
+        newhead.next=head;
+        ListNode cur=newhead;
+        ListNode first=cur;
+        ListNode second =cur;
+        ListNode temp=cur;
+        while (cur.next!=null&&cur.next.next!=null){
+            temp=cur.next.next.next;
+            first=cur.next;
+            second=cur.next.next;
+            cur.next=second;
+            second.next=first;
+            first.next=temp;
+            cur=first;
+        }
+        return newhead.next;
+
+    }
 
 }
 
 public class main {
-        public static int longestConsecutive(int[] nums) {
+    //最长连续序列
+    //https://leetcode.cn/problems/longest-consecutive-sequence/
+    public static int longestConsecutive(int[] nums) {
             HashSet<Integer> set =new HashSet<>();
             for (int num : nums){
                 set.add(num);
@@ -235,6 +300,52 @@ public class main {
         时间复杂度:O(N) 空间复杂度:O(N)
          */
         }
+    //在排序数组中查找元素的第一个和最后一个位置
+    //https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/
+    public static int[] searchRange(int[] nums, int target) {
+        int left=bsearch(nums,target,true);
+        int right=bsearch(nums,target,false)-1;
+        if(left<=right&&right<= nums.length-1&&nums[left]==target&&nums[right]==target){
+            return new int[]{left,right};
+        }
+        else {
+            return new int[]{-1,-1};
+        }
+
+
+    }
+
+   //[5,7,7,8,8,10]
+    private static int bsearch(int[] nums, int target,boolean lower) {
+        int begin=0,end= nums.length-1;
+        int ans= nums.length;
+        while (begin<=end){
+            int mid=begin+(end-begin)/2;
+            if(nums[mid]>target||(lower&&nums[mid]>=target)){
+                end=mid-1;
+                ans=mid;
+            }
+            else{
+                begin=mid+1;
+            }
+        }
+        return ans;
+    }
+
+//https://leetcode.cn/problems/binary-search/
+    //二分查找
+    public int search(int[] nums, int target) {
+        int left=0,right=nums.length-1;
+        while(left<=right){
+            int mid=left+(right-left)/2;
+            if (nums[mid]==target) return mid;
+            else if (nums[mid]>target){
+                right=mid-1;
+            }
+            else left=mid+1;
+        }
+        return -1;
+    }
 
     public static void main(String[] args) {
 

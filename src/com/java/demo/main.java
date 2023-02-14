@@ -267,6 +267,184 @@ class Solution {
 
     }
 
+    public boolean isHappy(int n) {
+        HashSet<Integer> red=new HashSet<>();
+        while(n != 1 && !red.contains(n)){
+            red.add(n);
+            n=getsum(n);
+        }
+        return n==1? true:false;
+    }
+    public  static int getsum(int n){
+        int sum=0;
+        while(n>0){
+            sum+=(n%10)*(n%10);
+            n=n/10;
+        }
+        return sum;
+    }
+
+        //https://leetcode.cn/problems/4sum-ii/
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer,Integer> sum1=new HashMap<>();
+        for (int i:nums1){
+            for (int j:nums2){
+                int temp=i+j;
+                if(sum1.containsKey(temp)){
+                    sum1.put(temp,sum1.get(temp)+1);
+                }
+                else {
+                    sum1.put(temp,1);
+                }
+            }
+        }
+        int res=0;
+        for (int i:nums3){
+            for(int j:nums4){
+                int temp=i+j;
+                if(sum1.containsKey(0-temp)){
+                 res+=sum1.get(0-temp);
+                }
+
+
+            }
+        }
+        return res;
+    }
+
+    //https://leetcode.cn/problems/ransom-note/
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int []red=new int[26];
+        for (int i=0;i<magazine.length();i++){
+            int l=magazine.charAt(i)-'a';
+            red[l]++;
+        }
+        for( int i=0;i<ransomNote.length();i++){
+            int l=ransomNote.charAt(i)-'a';
+            red[l]--;
+            if(red[l]<0)
+                return false;
+        }
+        return true;
+    }
+
+    //https://leetcode.cn/problems/3sum/
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res=new ArrayList<>();
+        for(int i=0;i<nums.length-1;i++){
+            if(nums[i]>0){
+                return res;
+            }
+            if(i>0&&nums[i]==nums[i-1]){
+                continue;
+            }
+            int l=i+1;
+            int r=nums.length-1;
+            while(l<r){
+                int sum=nums[i]+nums[l]+nums[r];
+                if(sum>0){
+                    r--;
+                }
+                else if (sum<0){
+                    l++;
+                }
+                else{
+
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    while(r>l&&nums[l]==nums[l+1])l++;
+                    while (r>l&& nums[r]==nums[r-1]) r--;
+                    r--;
+                    l++;
+                }
+            }
+        }
+        return res;
+    }
+
+    //https://leetcode.cn/problems/4sum/
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> res=new ArrayList<>();
+        for(int i=0;i<nums.length-2;i++){
+            if(nums[i]>target&&nums[i]>0) break;
+            if (i>0&&nums[i]==nums[i-1]) continue;
+            for(int j=i+1;j< nums.length-1;j++){
+                if(nums[j]+nums[i]>target&&nums[j]>0) break;
+                if(j>i+1&&nums[j]==nums[j-1]) continue;
+                int l=j+1;
+                int r=nums.length-1;
+                while(l<r){
+                    int sum=nums[i]+nums[j]+nums[l]+nums[r];
+                    if(sum>target){
+                        r--;
+                    }
+                    else if (sum<target){
+                        l++;
+                    }
+                    else{
+
+                        res.add(Arrays.asList(nums[i],nums[j], nums[l], nums[r]));
+                        while(r>l&&nums[l]==nums[l+1])l++;
+                        while (r>l&& nums[r]==nums[r-1]) r--;
+                        r--;
+                        l++;
+                    }
+                }
+            }
+
+        }
+        return res;
+    }
+
+    //https://leetcode.cn/problems/reverse-words-in-a-string/
+    public String reverseWords(String s) {
+        int l=0,r=s.length()-1;
+        while(s.charAt(l)==' ')l++;
+        while(s.charAt(r)==' ')r--;
+        StringBuilder s1=new StringBuilder();
+        for(int i=l;i<=r;i++){
+            if(s.charAt(i)==' '&&s.charAt(i+1)==' ')
+            {
+                continue;
+            }
+            else{
+                s1.append(s.charAt(i));
+            }
+        }
+        // 2.反转整个字符串
+        reverseString(s1, 0, s1.length() - 1);
+        // 3.反转各个单词
+        reverseEachWord(s1);
+        return s1.toString();
+    }
+
+    /**
+     * 反转字符串指定区间[start, end]的字符
+     */
+    public void reverseString(StringBuilder sb, int start, int end) {
+        while (start < end) {
+            char temp = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, temp);
+            start++;
+            end--;
+        }
+    }
+
+    private void reverseEachWord(StringBuilder sb) {
+        int start = 0;
+        int end = 1;
+        int n = sb.length();
+        while (start < n) {
+            while (end < n && sb.charAt(end) != ' ') {
+                end++;
+            }
+            reverseString(sb, start, end - 1);
+            start = end + 1;
+            end = start + 1;
+        }
+    }
 }
 
 public class main {

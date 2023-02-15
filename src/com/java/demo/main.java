@@ -445,8 +445,93 @@ class Solution {
             end = start + 1;
         }
     }
+
+    //https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/
+    public int strStr(String haystack, String needle) {
+        for(int i=0;i<haystack.length();i++){
+            if(haystack.charAt(i)==needle.charAt(0)){
+                int j=i;
+                for(j=i;j<haystack.length()&&(j-i)<needle.length();j++){
+                    if(haystack.charAt(j)!=needle.charAt(j-i))
+                        break;
+                }
+                if(j<=haystack.length()&&(j-i)==needle.length()){
+                    return i;
+                }
+
+
+            }
+
+        }
+        return -1;
+    }
+
+    public boolean isValid(String s) {
+        Stack<Character> stack=new Stack<>();
+        for(int i=0;i<s.length();i++ ){
+            if(s.charAt(i)=='('||s.charAt(i)=='['||s.charAt(i)=='{'){
+                stack.push(s.charAt(i));
+            }
+            else{
+                if(stack.empty()) return false;
+                if(s.charAt(i)==')'&&stack.peek()=='(') {
+                    stack.pop();
+                }
+                else if(s.charAt(i)==']'&&stack.peek()=='[') {
+                    stack.pop();
+                }
+                else if(s.charAt(i)=='}'&&stack.peek()=='{') {
+                    stack.pop();
+                }
+                else  return false;
+
+            }
+        }
+        if(stack.empty()) return true;
+        return false;
+    }
+
 }
 
+
+class MyQueue {
+    List<Integer> stackin;
+    List<Integer> stackout;
+    public MyQueue() {
+        stackin=new ArrayList<>();
+        stackout=new ArrayList<>();
+    }
+
+    public void push(int x) {
+            stackin.add(x);
+    }
+
+    public int pop() {
+        capzuo();
+        int res=stackout.get(stackout.size()-1);
+        stackout.remove(stackout.size()-1);
+        return res;
+    }
+
+    public int peek() {
+        capzuo();
+        return stackout.get(stackout.size()-1);
+    }
+
+    public boolean empty() {
+        capzuo();
+        if(stackout.isEmpty()) return true;
+        return false;
+    }
+    public  void capzuo(){
+        if(!stackout.isEmpty()) return;
+        if(stackin.isEmpty()) return;
+        for(int i=stackin.size()-1;i>=0 ;i--){
+            stackout.add(stackin.get(i));
+        }
+        stackin.clear();
+    }
+}
 public class main {
     //最长连续序列
     //https://leetcode.cn/problems/longest-consecutive-sequence/

@@ -1,5 +1,6 @@
 package com.java.demo;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 class Node {
@@ -1785,4 +1786,326 @@ void exchange(char c[],int x,int y){
         }
 
     }
+
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>>map=new HashMap<>();
+        for(String s:strs){
+            char[] ch=s.toCharArray();
+            Arrays.sort(ch);
+            String key=String.valueOf(ch);
+            if(map.containsKey(key)){
+                List<String> tmp=new ArrayList<>(map.get(key));
+                tmp.add(s);
+                map.put(key,tmp);
+            }
+            else {
+                 map.put(key,Arrays.asList(s));
+            }
+        }
+        List<List<String>> res=new ArrayList<>();
+        Iterator < String > iterator = map.keySet().iterator();
+        while(iterator.hasNext()){
+            String key=iterator.next();
+            res.add(map.get(key));
+        }
+        return res;
+    }
+
+    public int minNumberOfHours(int initialEnergy, int initialExperience, int[] energy, int[] experience) {
+            int needEngery=0;
+            int needExperience=0;
+            for(int i=0;i<energy.length;i++){
+                if(initialEnergy<= energy[i]){
+                    int t=energy[i]-initialEnergy+1;
+                    needEngery+=t;
+                    initialEnergy=1;
+                }
+                else {
+                    initialEnergy-=energy[i];
+                }
+                if(initialExperience<=experience[i]){
+                    int t=experience[i]-initialExperience+1;
+                    needExperience+=t;
+                    initialExperience+=experience[i];
+                }
+                else {
+                    initialExperience+=experience[i];
+                }
+            }
+            return needEngery+needExperience;
+    }
+
+    /**
+     * https://leetcode.cn/problems/longest-subsequence-with-limited-sum/
+     * @param nums
+     * @param queries
+     * @return
+     */
+
+    public int[] answerQueries(int[] nums, int[] queries) {
+            int[] res= new int[queries.length];
+        Arrays.sort(nums);
+        int []sum=new int[nums.length];
+        sum[0]=nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            sum[i]=sum[i-1]+nums[i];
+        }
+
+
+        for (int i = 0; i < queries.length; i++) {
+            res[i]=bysearch(sum,queries[i]);
+
+        }
+        return res;
+    }
+    private int  bysearch(int[] nums, int t){
+        int low = 0, high = nums.length;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] > t) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+
+    }
+
+    /**
+     * https://leetcode.cn/problems/split-two-strings-to-make-palindrome/
+     * @param a
+     * @param b
+     * @return
+     */
+
+//    private boolean huiwen(String a){
+//        if (a.length()==0){
+//            return true;
+//        }
+//        int i=0,j=a.length()-1;
+//        while(i<j){
+//            if(a.charAt(i++)!=a.charAt(j--))
+//            {
+//                return false;
+//            }
+//
+//        }
+//        return true;
+//
+//    }
+    public boolean checkPalindromeFormation(String a, String b) {
+        int n=b.length();
+        if (n==0||n==1){
+            return true;
+        }
+        return checkconcatent(a,b)||checkconcatent(b,a);
+    }
+    private boolean checkconcatent(String a ,String b){
+        int n=a.length();
+        int i=0,j=n-1;
+        while(i<j&&a.charAt(i)==b.charAt(j)){
+            i++;
+            j--;
+        }
+        if(i>=j) {
+            return true;
+        }
+        return checkselfij(a,i,j)||checkselfij(b,i,j);
+    }
+    private boolean checkselfij(String a, int i,int j){
+        while (i<j&&a.charAt(i)==a.charAt(j)){
+            i++;
+            j--;
+        }
+        return i>=j;
+
+
+
+    }
+
+    public boolean findSubarrays(int[] nums) {
+        HashMap<Integer,Integer> temp=new HashMap<>();
+        int length=nums.length;
+        if (length==2) return false;
+        for (int i=0;i<length-1;i++){
+            int sum=nums[i]+nums[i+1];
+            if(temp.containsKey(sum))return true;
+            temp.put(sum,1);
+        }
+        return false;
+
+    }
+    public int test(int n,int[]nums){
+        int[] dp=new int[n];
+        dp[0]=nums[0];
+        boolean flag=false;
+        dp[1]=nums[1]>nums[0]?nums[1]:nums[0];
+        if(dp[1]!=dp[0]) flag=false;
+        for (int i=2;i<n;i++){
+            int t1=dp[i-2]+nums[i];
+            if(t1>dp[i-1]){
+                flag=true;
+                dp[i]=t1;
+            }
+            else{
+                dp[i]=dp[i-1];
+            }
+        }
+        return dp[n];
+    }
+
+    public int search1 (int[] nums, int target) {
+        // write code here
+        int begin=0,end=nums.length-1;
+
+        while(begin<=end){
+            int mid=begin+(end-begin)/2;
+            if(nums[mid]==target){
+                return mid;
+            }
+            else if(nums[mid]>target){
+                end=mid-1;
+            }
+            else{
+                begin=mid+1;
+            }
+            if (end==begin&&nums[end]!=target){
+                return -1;
+            }
+        }
+        return -1;
+    }
+    public boolean Find(int target, int [][] array) {
+            int row=0;
+            int col=array[0].length-1;
+            while(row<=array.length-1&&col>=0){
+               if(target==array[row][col]){
+                   return true;
+               }
+               else if(target>array[row][col]){
+                   row++;
+               }
+               else
+               {
+                   col--;
+               }
+
+            }
+            return false;
+    }
+    public int minmumNumberOfHost (int n, int[][] startEnd) {
+        int[] start = new int[n];
+        int[] end = new int[n];
+        //分别得到活动起始时间
+        for(int i = 0; i < n; i++){
+            start[i] = startEnd[i][0];
+            end[i] = startEnd[i][1];
+        }
+        //单独排序
+        Arrays.sort(start, 0, start.length);
+        Arrays.sort(end, 0, end.length);
+        int res = 0;
+        int j = 0;
+        for(int i = 0; i < n; i++){
+            //新开始的节目大于上一轮结束的时间，主持人不变
+            if(start[i] >= end[j])
+                j++;
+            else
+                //主持人增加
+                res++;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int[] tree = new int[n];
+        for (int i = 0; i < n; i++) {
+            tree[i] = in.nextInt();
+        }
+        int[] sum=new int[n];
+        sum[0]=tree[0]%m;
+        int res=0;
+        if(tree[0]%m==0)
+            res++;
+        for (int i = 1; i < n; i++) {
+            sum[i]=sum[i-1]+tree[i];
+//            if(tree[i]%m==0){
+//                res++;
+//            }
+        }
+
+        for (int i = 1; i <n; i++) {
+            if(sum[i]%m==0){
+                res++;
+            }
+            for (int j = i-1; j >=0 ; j--) {
+                    int temp=sum[i]-sum[j];
+                    if(temp%m==0){
+                        res++;
+                    }
+            }
+        }
+        System.out.println(res);
+
+
+    }
+
+            // 注意 hasNext 和 hasNextLine 的区别
+//            while (in.hasNextLine()) { // 注意 while 处理多个 case
+//                int n = in.nextInt();
+//                char[] a= in.next().toCharArray();
+//                char[]  b= in.next().toCharArray();
+//                Arrays.sort(a);
+//                Arrays.sort(b);
+//                int res=0;
+//                for (int i = 0; i < a.length; i++) {
+//                        res+=Math.abs((int)(a[i]-b[i]));
+//                }
+//                System.out.println(res);
+//                if(a<=9){
+//                    System.out.println(a);
+//                    continue;
+//                }
+//                if(a>45){
+//                    System.out.println(-1);
+//                }
+//                int i=0;
+//                int sum=0;
+//                while(a>0){
+//                    if(a>=(9-i)){
+//                        int t=(9-i)*(int)Math.pow(10,i);
+//                        sum+=t;
+//                        a=a-(9-i);
+//                        i++;
+//
+//                    }
+//                    else{
+//                        int t=a*(int)Math.pow(10,i);
+//                        sum+=t;
+//                        a=0;
+//                    }
+//                }
+//                System.out.println(sum);
+
+
+//            }
+//        }
+//        offer o=new offer();
+//        System.out.println(o.minmumNumberOfHost(3,new int[][]{{1,2},{1,2},{2,3}}));
+//        String[] s=new String[]{"eat", "tea", "tan", "ate", "nat", "bat"};
+//        List<List<String>> res=groupAnagrams(s);
+//        System.out.println(res);
+//        offer o=new offer();
+//        long t =System.currentTimeMillis();
+//        System.out.println(System.currentTimeMillis());
+////        System.out.println(dfs(45));
+//        System.out.println(System.currentTimeMillis()-t);
+//        System.out.println(o.huiwen("adaada"));
+
+
+
 }

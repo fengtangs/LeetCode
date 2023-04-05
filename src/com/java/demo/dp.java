@@ -9,6 +9,7 @@ import java.util.*;
  * cite form 代码随想录
  */
 public class dp {
+
     //斐波那契数  https://leetcode.cn/problems/fibonacci-number/
     public int fib(int n) {
         if(n==0||n==1)
@@ -206,21 +207,21 @@ public class dp {
         return dp[amount]==(amount+1) ? -1: dp[amount];
     }
     //完全平方数 https://leetcode.cn/problems/perfect-squares/
-    public int numSquares(int n) {
-        int value=(new Double(n)).intValue();
-        if(Math.sqrt(n)==value) return 1;
-        int[] dp =new int[n+1];
-        Arrays.fill(dp,value+1);
-        dp[0]=0;
-        for(int i=0;i<=n;i++){
-            for(int j=1;j*j<=i;j++){
-                if(i-j*j>=0){
-                    dp[i]=Math.min(dp[i],dp[i-j*j]+1);
-                }
-            }
-        }
-        return dp[n];
-    }
+//    public int numSquares(int n) {
+//        int value=(new Double(n)).intValue();
+//        if(Math.sqrt(n)==value) return 1;
+//        int[] dp =new int[n+1];
+//        Arrays.fill(dp,value+1);
+//        dp[0]=0;
+//        for(int i=0;i<=n;i++){
+//            for(int j=1;j*j<=i;j++){
+//                if(i-j*j>=0){
+//                    dp[i]=Math.min(dp[i],dp[i-j*j]+1);
+//                }
+//            }
+//        }
+//        return dp[n];
+//    }
     //单词拆分 https://leetcode.cn/problems/word-break/
     public boolean wordBreak(String s, List<String> wordDict) {
         HashSet<String> ss =new HashSet<>();
@@ -326,5 +327,431 @@ public class dp {
     public int maxProfit4(int k, int[] prices) {
         return 1;
     }
+
+
+    //https://leetcode.cn/problems/li-wu-de-zui-da-jie-zhi-lcof/
+    //剑指 Offer 47. 礼物的最大价值
+    public int maxValue(int[][] grid) {
+            int m=grid.length;
+            int n=grid[0].length;
+            int dp[] [] =new int[m][n];
+//            dp[0][0]=grid[0][0];
+            for (int i=0;i<m;i++){
+                for(int j=0;j<n;j++){
+                    if(i>0){
+                        dp[i][j]=Math.max(dp[i-1][j],dp[i][j]);
+                    }
+                    if(j>0){
+                        dp[i][j]=Math.max(dp[i][j],dp[i][j-1]);
+                    }
+                    dp[i][j]+=grid[i][j];
+                }
+            }
+            return dp[m-1][n-1];
+
+
+    }
+
+
+    //https://leetcode.cn/problems/minimum-recolors-to-get-k-consecutive-black-blocks/
+    //得到K个黑块的最少涂色次数
+    public int minimumRecolors(String blocks, int k) {
+        int l = 0, r = 0, cnt = 0;
+        while (r < k) {     //得到cnt是需要涂白的块数，
+            cnt += blocks.charAt(r) == 'W' ? 1 : 0;
+            r++;
+        }
+        int res = cnt;
+       while(r<blocks.length())
+       {
+           cnt+=blocks.charAt(r++)=='W'?1:0; //右边的
+           cnt-=blocks.charAt(l++)=='W'?1:0; //左边的
+           res=Math.min(res,cnt);
+       }
+        return res;
+    }
+
+
+    /**
+     *https://leetcode.cn/problems/minimum-deletions-to-make-string-balanced/
+     *使字符串平衡的最少删除次数
+     *
+     * 动态规划
+     * 1.我们关注第i个字符，如果这个字符串是B，那么他这个字符串的平衡与前i-1一样，我们只需要把preb++
+     * 如果这个字符串是a，那么有两种方式，要么把字符串i-1中出现的B全部删掉，要么，把这个a删掉，这里我们取最小值就行
+     * dp记录是前i-1中达到平衡需要删除的字符串数量
+     * preb记录前面出现的b的数量
+     * 也就是当前dp=min(dp+1,preb)
+     *
+     *
+     * @param s
+     * @return
+     */
+    public int minimumDeletions(String s) {
+        int dp=0;
+        int preb=  s.charAt(0)=='b'? 1:0;
+        for(int i=1;i<s.length();i++){
+            if(s.charAt(i)=='a'){
+                dp=Math.min(dp+1,preb);
+            }
+            else{
+                preb++;
+            }
+
+        }
+        return dp;
+    }
+
+
+
+        public int minOperationsMaxProfit(int[] customers, int boardingCost, int runningCost) {
+            int wait=0;
+            int n=customers.length;
+            int maxllirun=0;
+            int nowlirun=0,i=0;
+            int minr=-1;
+            while(wait>0||i<n){
+                wait+=i<n? customers[i] :0;
+                int up=Math.min(4,wait);
+                wait-=up;
+                i++;
+                nowlirun+=up*boardingCost-runningCost;
+                if(nowlirun>maxllirun){
+                    maxllirun=nowlirun;
+                    minr=i;
+                }
+
+            }
+            return minr;
+        }
+
+    /**
+     * https://leetcode.cn/problems/making-file-names-unique/
+     * 保证文件名唯一
+      * @param names
+     * @return
+     */
+    public String[] getFolderNames(String[] names) {
+            HashMap<String,Integer> same=new HashMap<String,Integer>();
+            String [] res=new String[names.length];
+            for(int i=0;i<names.length;i++){
+                if(same.containsKey(names[i])){
+                    int index=same.get(names[i]);
+
+                    while(same.containsKey(addname(names[i],index))){
+                        index++;
+                    }
+                    res[i]=addname(names[i],index);
+                    same.put(names[i],index+1);
+                    same.put(addname(names[i],index),1);
+                }
+                else{
+                    same.put(names[i],1);
+                    res[i]=names[i];
+
+                }
+
+
+            }
+            return res;
+     }
+     private String addname(String name, int k){
+        return name+"("+Integer.toString(k)+")";
+     }
+
+
+
+    //
+    public String printBin(double num) {
+
+        StringBuffer tmp=new StringBuffer("0.");
+        int t=0;
+        if(num==0){
+            return "0";
+        }
+        while (t<30&&num!=0){
+            double r=num*2;
+            if(r>=1){
+                tmp.append('1');
+                num=r-1;
+            }
+            else{
+                tmp.append('0');
+                num=r;
+            }
+            t++;
+        }
+        if(num!=0){
+            return "ERROR";
+        }
+        return String.valueOf(tmp);
+
+    }
+
+
+    public int[][] largestLocal(int[][] grid) {
+        int lenth=grid.length;
+        int[][] res=new int[lenth-2][lenth-2];
+        for(int i=0;i<lenth-2;i++){
+            for(int j=0;j<lenth-2;j++)
+            {
+                res[i][j]=localmax(grid,i,j);
+            }
+        }
+        return res;
+    }
+
+    private  int localmax(int[][]grid,int l,int r){
+        int max=grid[l][r];
+        for(int i=l;i<l+3;i++){
+            for(int j=r;j<r+3;j++){
+                max=grid[i][j]>max?grid[i][j]:max;
+            }
+        }
+        return max;
+
+    }
+
+    /**https://leetcode.cn/problems/merge-similar-items/
+     *2363. 合并相似的物品
+     * @param items1
+     * @param items2
+     * @return
+     */
+    public static List<List<Integer>> mergeSimilarItems(int[][] items1, int[][] items2) {
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        List<List<Integer>> im1=new ArrayList<List<Integer>>();
+        List<List<Integer>> im2=new ArrayList<List<Integer>>();
+        for(int i=0;i<items1.length;i++){
+            im1.add(Arrays.asList(items1[i][0],items1[i][1]));
+        }
+        for(int i=0;i<items2.length;i++){
+            im2.add(Arrays.asList(items2[i][0],items2[i][1]));
+        }
+        im1.sort(new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> o1, List<Integer> o2) {
+               return o1.get(0)> o2.get(0)?1 :-1;
+            }
+        });
+        im2.sort(new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> o1, List<Integer> o2) {
+                return o1.get(0)> o2.get(0)?1 :-1;
+            }
+        });
+//        System.out.println(im1);
+//        System.out.println(im2);
+        int i=0,j=0;
+        while (i<im1.size()&&j<im2.size()){
+            if(im1.get(i).get(0).equals(im2.get(j).get(0))){
+                res.add(Arrays.asList(im1.get(i).get(0),im1.get(i).get(1)+im2.get(j).get(1)));
+                i++;
+                j++;
+            }
+            else if(im1.get(i).get(0)>(im2.get(j).get(0))){
+                res.add(Arrays.asList(im2.get(j).get(0),im2.get(j).get(1)));
+                j++;
+            }
+            else{
+                res.add(Arrays.asList(im1.get(i).get(0),im1.get(i).get(1)));
+                i++;
+            }
+        }
+        while(i< im1.size()){
+            res.add(Arrays.asList(im1.get(i).get(0),im1.get(i).get(1)));
+            i++;
+        }
+        while(j< im2.size()){
+            res.add(Arrays.asList(im2.get(j).get(0),im2.get(j).get(1)));
+            j++;
+        }
+        return res;
+    }
+
+
+    public int minimumOperations(int[] nums) {
+        Map<Integer,Integer>t=new HashMap<>();
+        int res=0;
+        for (int i:nums ) {
+            if(i!=0&&!t.containsKey(i)){
+                    res++;
+                    t.put(i,1);
+                }
+
+            }
+        return res;
+
+    }
+
+
+    /**
+     * https://leetcode.cn/problems/find-longest-subarray-lcci/
+     * 前缀和
+     * @param array
+     * @return
+     */
+    public String[] findLongestSubarray(String[] array) {
+        Map<Integer,Integer> temp=new HashMap<>();
+        temp.put(0,-1);
+        int begin=-1,maxl=0;
+        int sum=0;
+        for(int i=0;i< array.length; i++){
+                char x=array[i].charAt(0);
+            if(x>='0'&&x<='9'){
+                sum++;
+            }
+            else {
+               sum--;
+            }
+
+            if(temp.containsKey(sum)){
+                if((i- temp.get(sum)>maxl)){
+                    maxl=i-temp.get(sum);
+                    begin=temp.get(sum)+1;
+                }
+
+            }
+            else{
+                temp.put(sum,i);
+            }
+        }
+
+        if(maxl==0) return new String[]{};
+        String [] res=new String[maxl];
+        System.arraycopy(array, begin, res, 0, maxl);
+        return res;
+    }
+
+    /**
+     * https://leetcode.cn/problems/jump-game-ii/
+     * 贪心算法
+     * @param nums
+     * @return
+     */
+    public int jump(int[] nums) {
+        if(nums==null||nums.length==1||nums.length==0) return 0;
+
+        int steps=0;
+        int n=nums.length;
+        int maxdistence=0;
+        int curdistance=0;
+        int i=0;
+        while(i<n){
+            maxdistence=Math.max(maxdistence,i+nums[i]);
+            if(maxdistence>=n-1){
+                steps++;
+                return steps;
+            }
+            if(i==curdistance){
+                curdistance=maxdistence;
+                steps++;
+            }
+
+            i++;
+        }
+
+
+        return steps;
+    }
+
+
+    public int[][] merge(int[][] intervals) {
+
+        int length=intervals.length;
+        if(length==0) return new int[][]{};
+        Arrays.sort(intervals,(x1,x2)->x1[0]!=x2[0]? Integer.compare(x1[0],x2[0]):Integer.compare(x1[1],x2[1])  );
+        int[][] res=new int[length][2];
+        int begin=intervals[0][0];
+        int end=intervals[0][1];
+        int index=0;
+        for(int i=1;i<length;i++){
+            if(intervals[i][0]<end){
+                end= end<intervals[i][1]? intervals[i][1]:end;
+            }else{
+                res[index][0]=begin;
+                res[index++][1]=end;
+                begin=intervals[i][0];
+                end=intervals[i][1];
+            }
+
+
+        }
+        res[index][0]=begin;
+        res[index][1]=end;
+        return Arrays.copyOfRange(res,0,index+1);
+
+    }
+
+
+    public boolean isValidSudoku(char[][] board) throws InterruptedException {
+        //记录行
+        boolean[][] row =new boolean[9][9];
+        //记录列
+        boolean[][]col =new boolean[9][9];
+        //记录小正方形
+        boolean[][]block = new boolean[9][9];
+            String s=new String();
+            s.wait();
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j]!='.'){
+                    int num=board[i][j]-'0'-1;
+                    if(row[i][num]||col[num][i]||block[i/3*3+j/3][num]){
+                        return false;
+                    }
+                    else{
+                        row[i][num]=true;
+                        col[num][j]=true;
+                        block[i/3*3+j/3][num]=true;
+                    }
+                }
+
+            }
+        }
+
+        return true;
+    }
+
+
+
+//
+    public static void main(String[] args) {
+//        final int sl;
+//        int[][] r={{1,1},{4,5},{3,8}};
+//        int[][] r2={{1,5},{3,1}};
+//        List<List<Integer>>res=mergeSimilarItems(r,r2);
+//        System.out.println(res);
+
+        List<Integer> list=new LinkedList<>();
+        list.add(1);
+        list.add(2);
+
+        //迭代器遍历--正向输出
+        ListIterator<Integer> it = list.listIterator();
+        while(it.hasNext()){//1：boolean hasNext()判断集合中是否有元素，如果有元素可以迭代，就返回true。
+            System.out.print(it.next()+" ");//2： E next()返回迭代的下一个元素
+        }
+
+        System.out.println("\n========================");
+
+        //迭代器遍历--反向输出
+        ListIterator<Integer> rit = list.listIterator(list.size());
+        while (rit.hasPrevious()){
+            System.out.print(rit.previous() +" ");
+        }
+
+
+//
+//        for (int y:tt
+//             ) {
+//            System.out.println(y);
+//
+//        }
+//        System.out.println(tt);
+
+    }
+//
+
 
 }

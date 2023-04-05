@@ -52,6 +52,35 @@ public class huisu {
         backtracking1(n,k,1);
         return res;
     }
+
+    public List<String> letterCombinations_1(String digits) {
+        if(digits.length()==0) return new ArrayList<>();
+        String[] table=new String[]{"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        List<String> res=new ArrayList<>();
+        String tmp=new String();
+        huisu_1(table,res,tmp,digits,0,digits.length());
+
+        return res;
+    }
+
+    private void huisu_1(String[] table,List<String> res, String tmp, String digits, int index, int length) {
+
+        //终止条件
+        if(tmp.length()==length){
+            res.add(new String(tmp));
+            tmp=new String();
+            return;
+        }
+        char c=digits.charAt(index);
+        for( int j=0;j<table[c-'0'].length();j++){
+            tmp=tmp+table[c-'0'].charAt(j);
+            huisu_1(table,res,tmp,digits,index+1,length);
+            tmp=tmp.substring(0,tmp.length()-1);
+        }
+
+    }
+
+
     //电话号码的字母组合 https://leetcode.cn/problems/letter-combinations-of-a-phone-number/
     List<String> resphone=new ArrayList<>();
     String spath;
@@ -73,6 +102,7 @@ public class huisu {
 
             return resphone;
     }
+
     private void backtracking2(String digits,int index){
         if(index==digits.length()){
             resphone.add(new String(spath));
@@ -80,12 +110,53 @@ public class huisu {
         }
         char digit=digits.charAt(index);
         String letters=phonemap.get(digit);
+//        letters.charAt()
         for(int i=0;i<letters.length();i++){
             spath=spath+letters.charAt(i);
             backtracking2(digits,index+1);
             spath=spath.substring(0,spath.length()-1);
 
         }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res=new ArrayList<>();
+        List<Integer> tmp=new ArrayList<>();
+        boolean [] used=new boolean[candidates.length];
+        Arrays.sort(candidates);        //要去掉重重复的，就必须是有序的，
+        huisu_2(res,tmp,candidates,target,0,0,used);
+        return res;
+    }
+
+
+    private void huisu_2(List<List<Integer>> res, List<Integer> tmp, int[] candidates, int target,int sum,int index,boolean[] used) {
+
+        if(sum==target){
+            res.add(new ArrayList<>(tmp));
+            tmp=new ArrayList<>();
+            return;
+        }
+        if(sum>target){
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if(i>0&&candidates[i]==candidates[i-1]&&used[i-1]==false){  //注意这里，如果当前这个数跟上一个数一样，
+                // 并且上一个数为false，说明这个数的值的情况，在上次回溯已经搞定了，不然的话，不可能到这个数上来，所以我们直接跳过这个数就行了
+                //其实可以简化一点，就是把used数组去掉，只要这个数跟上一个数相等，我i们就直接跳过。但是这样的话，在下面for循环中的回溯，index=i+1;
+                continue;
+            }
+            if(sum+candidates[i]<=target&&!used[i]){
+                sum+=candidates[i];
+                tmp.add(candidates[i]);
+                used[i]=true;
+                huisu_2(res,tmp,candidates,target,sum,i,used);//注意，这里传值是传的i，表示我们不能重复取组合里面的数。
+                tmp.remove(tmp.size()-1);
+                used[i]=false;
+                sum-=candidates[i];
+            }
+
+        }
+
     }
 
     // 组合总和2 https://leetcode.cn/problems/combination-sum/
@@ -150,6 +221,88 @@ public class huisu {
         backtracking4(s,0);
         return resstring;
     }
+
+
+    public static List<String> restoreIpAddresses_ip(String s) {
+        List<List<String>> res=new ArrayList<>();
+        List<String> tmp=new ArrayList<>();
+        if(s.length()>12) return tmp;
+        int num_point=0;
+
+        huisu_ip(res,tmp,s,num_point,0);
+        tmp=new ArrayList<>();
+        TreeSet<String > set=new TreeSet<>();
+
+        for (List<String>tt:res) {
+            StringBuffer ip=new StringBuffer();
+            for (int i = 0; i < tt.size(); i++) {
+                if(i==0){
+                    ip.append(tt.get(i));
+                }
+                else {
+                    ip.append("."+tt.get(i));
+                }
+            }
+//            System.out.println(ip);
+            set.add(new String(ip));
+
+        }
+        Iterator<String> iterator= set.iterator();
+        while(iterator.hasNext()){
+            tmp.add(iterator.next());
+        }
+        return tmp;
+    }
+
+    private static void huisu_ip(List<List<String>> res, List<String> tmp, String news, int num_point, int startindex) {
+        if(num_point>3){
+//            if(check(tmp.get(3))){
+                res.add(new ArrayList<>(tmp));
+                tmp=new ArrayList<>();
+//            }
+            return;
+        }
+
+        for (int i = startindex; i <news.length() ; i++) {
+            String sub=news.substring(startindex,i+1);
+            if(num_point==3){
+                sub=news.substring(startindex,news.length());
+            }
+
+            if(check(sub)){
+                tmp.add(sub);
+                num_point++;
+                huisu_ip(res,tmp,news,num_point,i+1);
+//                if(num_point==4){
+//                    num_point--;
+//                    tmp.remove(tmp.size()-1);
+//                }
+                num_point--;
+                tmp.remove(tmp.size()-1);
+            }else{
+                break;
+            }
+        }
+        
+    }
+
+    public static boolean check(String s){
+        int sum=0;
+        if(s.length()>1&&s.charAt(0)=='0'){
+            return false;
+        }
+        for (int i = 0; i <s.length(); i++) {
+            sum*=10;
+            sum+=(int)(s.charAt(i)-'0');
+        }
+        if(sum<=255){
+            return true;
+        }
+        return false;
+    }
+
+
+
     //复原IP地址 https://leetcode.cn/problems/restore-ip-addresses/
     List<String> resip=new ArrayList<>();
     private void backtracking5(StringBuilder s, int sindex,int numofpoint){
@@ -262,6 +415,74 @@ public class huisu {
         backtracking8(nums,used);
         return res;
     }
+
+    public static void main(String[] args) {
+        List<List<String>>t=new ArrayList<>();
+
+        t.add(new ArrayList<>(Arrays.asList("JFK", "SFO")));
+        t.add(new ArrayList<>(Arrays.asList("JFK","ATL")));
+        t.add(new ArrayList<>(Arrays.asList("SFO","ATL")));
+        t.add(new ArrayList<>(Arrays.asList("ATL","JFK")));
+        t.add(new ArrayList<>(Arrays.asList("ATL","SFO")));
+
+        findItinerary_1(t);
+
+        System.out.println("----------------------------------------------------------");
+        Collections.sort(t, (a, b) -> a.get(1).compareTo(b.get(1)));
+        for (List<String>rr: t) {
+            for (String s:rr) {
+                System.out.print(s+" ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    public static List<String> findItinerary_1(List<List<String>> tickets) {
+       //先把所有的结果都找到，然后再找一个字典序最小的。
+        List<List<String>> res=new ArrayList<>();
+        List<String> tmp=new ArrayList<>();
+//        Collections.sort(tickets, (a, b) -> a.get(1).compareTo(b.get(1)));
+        tmp.add("JFK");
+        boolean[] used =new boolean[tickets.size()];
+        huisu_plane(res,tmp,tickets,used);
+        tmp=new ArrayList<>();
+        List<String> sorts=new ArrayList<>();
+        for (List<String>rr: res) {
+            StringBuffer t=new StringBuffer();
+            for (String s:rr) {
+                t.append(s+" ");
+            }
+            sorts.add(new String(t));
+        }
+        Collections.sort(sorts);
+        String [] h=sorts.get(0).split(" ");
+        for(int i=0;i<h.length;i++){
+            tmp.add(h[i]);
+        }
+        return tmp;
+
+
+    }
+
+    private static void huisu_plane(List<List<String>> res, List<String> tmp, List<List<String>> tickets, boolean[] used) {
+        if(tmp.size()== tickets.size()+1){
+            res.add(new ArrayList<>(tmp));
+            tmp=new ArrayList<>();
+            return;
+        }
+        for(int i=0;i<tickets.size();i++){
+            if(!used[i]&&tickets.get(i).get(0).equals(tmp.get(tmp.size()-1))){
+                used[i]=true;
+                tmp.add(tickets.get(i).get(1));
+                huisu_plane(res,tmp,tickets,used);
+                used[i]=false;
+                tmp.remove(tmp.size()-1);
+            }
+        }
+    }
+
+
     //重新安排行程https://leetcode-cn.com/problems/reconstruct-itinerary  还没有掌握
     //path记录路线，res存所有路线
     List<String> pathfind = new ArrayList<>();

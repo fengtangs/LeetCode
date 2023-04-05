@@ -30,6 +30,75 @@ class TreeNode {
 }
 //二叉树相关题目
 public class tree {
+
+    private void tttt(ArrayList<Integer>list,TreeNode root){
+        if(root==null){
+            return;
+        }
+        list.add(root.val);
+        tttt(list,root.left);
+        tttt(list,root.right);
+
+    }
+    public int[] preorderTraversal1 (TreeNode root) {
+        // write code here
+        ArrayList<Integer> res=new ArrayList<Integer>();
+       tttt(res,root);
+       int[] r=new int[res.size()];
+        for (int i = 0; i < res.size(); i++) {
+            r[i]= res.get(i);
+        }
+        return r;
+
+    }
+
+
+    //https://leetcode.cn/problems/binary-tree-preorder-traversal/
+    public List<Integer> preorderTraversal(TreeNode root) {
+       List<Integer> res=new ArrayList<>();
+       Stack<TreeNode> stack=new Stack<>();
+       if(root==null) return res;
+       stack.push(root);
+       while(!stack.isEmpty()){
+           TreeNode tmp=stack.pop();
+           res.add(tmp.val);
+
+           if(tmp.right!=null) stack.push(tmp.right);
+           if(tmp.left!=null) stack.push(tmp.left);
+       }
+       return res;
+
+    }
+
+    //https://leetcode.cn/problems/binary-tree-inorder-traversal/
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res=new ArrayList<>();
+        if(root==null) return res;
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode cur=root;
+        stack.push(cur);
+        while (cur!=null||!stack.isEmpty()){
+            if(cur!=null){
+                while(cur.left!=null){
+                    stack.push(cur.left);
+                    cur=cur.left;
+                }
+            }
+
+            cur=stack.pop();
+            res.add(cur.val);
+
+            if (cur.right!=null){
+                stack.push(cur.right);
+
+            }
+            cur=cur.right;
+
+        }
+        return res;
+    }
+
+
     //二叉树前序递归遍历
     public void pretree(TreeNode root){
         if(root==null) return ;
@@ -118,6 +187,10 @@ public class tree {
         }
         return res.stream().mapToInt(Integer::valueOf).toArray();
     }
+
+
+
+
     //二叉树的层序遍历 https://leetcode.cn/problems/binary-tree-level-order-traversal/
     public List<List<Integer>> levelOrder(TreeNode root) {
         Queue<TreeNode> que=new  LinkedList<TreeNode>();

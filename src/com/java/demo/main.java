@@ -490,6 +490,69 @@ class Solution {
         if(stack.empty()) return true;
         return false;
     }
+    //https://leetcode.cn/problems/evaluate-reverse-polish-notation/
+    //逆波兰表达式
+    public static int evalRPN(String[] tokens) {
+        Stack<Integer> stack=new Stack<>();
+        for (int i=0;i<tokens.length;i++){
+            if("+".equals(tokens[i])){
+                int a=stack.pop();
+                stack.push(stack.pop()+a);
+            }
+            else if("-".equals(tokens[i])){
+                int a=stack.pop();
+                stack.push(stack.pop()-a);
+            }
+            else if("*".equals(tokens[i])){
+                int a=stack.pop();
+                stack.push(stack.pop()*a);
+            }
+            else if("/".equals(tokens[i])){
+                int a=stack.pop();
+                stack.push(stack.pop()/a);
+            }
+            else{
+                stack.push(Integer.parseInt(tokens[i]));
+            }
+        }
+        return stack.peek();
+    }
+
+
+    //https://leetcode.cn/problems/sliding-window-maximum/
+    class queue1{
+        Deque<Integer> deque=new LinkedList<>();
+        void poll(int val){
+            if (!deque.isEmpty()&&val==deque.peek()){
+                deque.poll();
+            }
+        }
+         void add(int val){
+            while (!deque.isEmpty()&&val>deque.getLast()){
+                deque.removeLast();
+            }
+            deque.add(val);
+        }
+        int peek(){
+            return deque.peek();
+        }
+
+    }
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int length= nums.length;
+        int[] res=new int[length-k+1];
+        queue1 queue1=new queue1();
+        for(int i=0;i<k;i++){
+            queue1.add(nums[i]);
+        }
+        res[0]= queue1.peek();
+        for (int i=k;i<length;i++){
+            queue1.poll(nums[i-k]);
+            queue1.add(nums[i]);
+            res[i-k+1]= queue1.peek();
+        }
+        return res;
+    }
 
 }
 
@@ -611,11 +674,20 @@ public class main {
     }
 
     public static void main(String[] args) {
+//        ApiTest test=new ApiTest();
+//        test.before();
+//        test.test_collisionRate();
+//        test.test_hashArea();
+        int s=4;
+        System.out.println(s>>>1);
+//        tenxun a=new tenxun();
+//        int [] nums = new int[]{0,3,7,2,5,8,4,6,0,1};
+//        System.out.println("-XX:+PrintGCDetails");
+////        System.out.print(longestConsecutive(nums));
+//        Solution temp=new Solution();
+//        int res=Solution.evalRPN(new String[]{"1", "2", "+", "3", "*"});
+//        System.out.println(res);
 
-        tenxun a=new tenxun();
-        int [] nums = new int[]{0,3,7,2,5,8,4,6,0,1};
-        System.out.println("-XX:+PrintGCDetails");
-        System.out.print(longestConsecutive(nums));
         //        System.out.println(a.mySqrt(5));
 //        int[] nums=new int[]{1,2,1,1,2};
         //int[] res =a.singleNumbers(new int[]{1, 2, 10, 4, 1, 4, 3, 3});

@@ -61,6 +61,20 @@ public class tanxin {
         }
         return max;
     }
+
+//    public int maxProfit(int[] prices) {
+//            int pre=prices[0];
+//            int sum=0;
+//            if(prices.length==1 ) return prices[0];
+//        for (int i = 0; i < prices.length; i++) {
+//            if(prices[i]>pre){
+//                sum=sum+prices[i]-pre;
+//            }
+//            pre=prices[i];
+//
+//        }
+//        return sum;
+//    }
     //买股票的最佳时机2 https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/
     public int maxProfit(int[] prices) {
         int res=0;
@@ -69,6 +83,28 @@ public class tanxin {
         }
         return res;
     }
+
+//    public boolean canJump(int[] nums) {
+//        int fanwei=nums[0]+1;
+//        if(nums[0]==0 ) {
+//            if(nums.length==1)
+//                return true;
+//            return false;
+//        }
+//        for(int i=1;i< nums.length;i++){
+//            int t=i+1+nums[i];
+//            fanwei=t>fanwei?t:fanwei;
+//            if(fanwei>=nums.length) {
+//                return true;
+//            }
+//            if(fanwei==(i+1))return false;
+//
+//        }
+//        return fanwei>= nums.length? true:false;
+//    }
+
+
+
     //跳跃游戏 https://leetcode.cn/problems/jump-game/
     public boolean canJump(int[] nums) {
         if(nums[0]==0 ) {
@@ -89,7 +125,25 @@ public class tanxin {
         return true;
 
     }
+
+
+
     //跳跃游戏2 https://leetcode.cn/problems/jump-game-ii/
+
+//    public int jump(int[] nums) {
+//        int length= nums.length;
+//        int curmax=0;
+//        int max=0;
+//        int res=0;
+//        for (int i=0;i<length-1;i++){
+//            max=max>(i+nums[i])? max:(i+nums[i]);
+//            if(i==max){
+//                curmax=max;
+//                res++;
+//            }
+//        }
+//        return res;
+//    }
     public int jump(int[] nums) {
         int length= nums.length;
         int nextcover=0, nowcover=0,res=0;
@@ -110,6 +164,31 @@ public class tanxin {
         return res;
     }
     //K 次取反后最大化的数组和 https://leetcode.cn/problems/maximize-sum-of-array-after-k-negations/
+/*    public int largestSumAfterKNegations(int[] nums, int k) {
+        Integer [] num =new Integer[nums.length];
+        for (int i = 0; i < num.length; i++) {
+            num[i]=nums[i];
+        }
+        Arrays.sort(num,(a,b)-> Math.abs( b)-Math.abs( a)
+        );
+        for (int i = 0; i < num.length; i++) {
+            if(num[i]<0&&k>0){
+                num[i]=-num[i];
+                k--;
+            }
+        }
+        if(k%2==1) num[num.length-1]=-num[num.length-1];
+        int sum=0;
+        for (int i = 0; i < num.length; i++) {
+            sum+=num[i];
+        }
+
+        return sum;
+
+    }*/
+
+
+
     public int largestSumAfterKNegations(int[] nums, int k) {
         Arrays.sort(nums);
         int res=0;
@@ -390,6 +469,34 @@ public class tanxin {
             result++;
         }
         return result;
+    }
+
+
+    /**
+     * https://leetcode.cn/problems/find-valid-matrix-given-row-and-column-sums/
+     * 给定行和列的和求满足的矩阵
+     *使用贪心算法，因为行的和与列的和是相等的，所以我们对于矩阵的每一个位置，我们都用当前行和列的最小值作为当前值，然后不断更新行的和与列的和，直到为0
+     * */
+
+    public int[][] restoreMatrix(int[] rowSum, int[] colSum) {
+        int[][] res=new int[rowSum.length][colSum.length];
+        for (int i = 0; i < rowSum.length; i++) {
+            for (int j = 0; j < colSum.length; j++) {
+                res[i][j]=0;
+                int min=rowSum[i]<colSum[j]?rowSum[i]:colSum[j];
+                if(min==0){
+                    continue;
+                }
+                res[i][j]=min;
+                rowSum[i]-=min;
+                colSum[j]-=min;
+
+            }
+        }
+        return res;
+
+
+
     }
 
 }
